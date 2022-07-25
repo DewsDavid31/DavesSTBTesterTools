@@ -25,3 +25,6 @@ default location of current AutoHotkey macros constructed
 default location for config files for specific cubes, can be loaded by all daves tools and is required to function
 ### VCS
 default location of local versions of STB software sorted by device and then release name, by default uses patten <version char><version char>xx/<version char><version char><release char><number>
+
+  Question: Why can't my configs work?
+     Answer: the config is built for my workplace's file structure and some IP is involved, so the real config and BVTconverter.ps1 are missing intentionally, if you want this in my company contact me directly. If not replace the Enter X portions with the things your workplace needs, it should function as long as your file structures follow the formats given. Use template.config for this.
