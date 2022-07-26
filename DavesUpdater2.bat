@@ -4,6 +4,11 @@ echo .\configs does not exist, make that folder and add a config file!
 pause
 exit
 )
+set d=0
+set x=0
+set r=0
+set k=0
+set b=0
 :configAgain
 echo config files:
 FOR /F "tokens=*" %%j in ('DIR .\configs /b w*') DO (
@@ -15,38 +20,32 @@ GOTO :configAgain
 )
 
 for /f "delims=" %%x in ('findstr /v /c:"//" .\configs\%config%') do (set "%%x")
+set /a "maxDev=numDevices-1"
 if not exist %VCS% mkdir %VCS%
 echo Welcome to Dave's Current Production Version Updater!
-set x=0
-set y=0
-:SymLoop1
-if defined branches[%y%] (
-call echo Updating branch %%branches[%y%]%%...
-	set x=0
-	:SymLoop2
-	if defined devices[%x%] (
-		call echo Updating %%devices[%x%]%% to VCS Current folder ...
-		call set sub=%%devices[%x%]%%
-		call set branch=%%branches[y]%%
-		call set /A index=%numDevices% * %y% + %x%
-		call set p=%%roots[%x%]%%\%%mappings[%index%]%%xx\
-		GOTO :Search
-		:Done
-		call set /A x+=1
-		GOTO :SymLoop2
-	)
-	call set /A y+=1
-	GOTO :SymLoop1
+:SymLoop1	
+if defined mappings[%k%] (
+	set /a "k+=1"
+	set /a "r=k/numBranches"
+	set /a "d+=1"
+	if %d%==%maxDev% set d=0
+	call echo Updating %%devices[%d%]%% to VCS Current folder ...
+	call set p=%%roots[%d%]%%%%mappings[%k%]%%xx\
+	call set branch=%%branches[%r%]%%
+	call set sub=%%devices[%d%]%%
+	GOTO :Search
+	:Done
+	GOTO SymLoop1
 )
+pause
 exit
-
 :Search
-FOR /F "delims=" %%j IN ('dir "%p%\%a%" /b /ad-h /t:w /od') DO SET b=%%j
+set b=
+FOR /F "delims=" %%a IN ('dir "%p%" /b /ad-h /t:w /od') DO SET b=%%a
+echo most recent %branch% software for %sub% is: %b%
 if not exist "%VCS%%sub%\%branch%\%b%" mkdir %VCS%%sub%\%branch%\%b%
 set source=%p%\%b%
 set target=%VCS%%sub%\%branch%\%b%
 xcopy /s/e/i/d/Y %source% %target%
 GOTO :Done
-
-
 exit
