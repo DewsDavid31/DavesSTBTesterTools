@@ -16,7 +16,10 @@ An autohotkey maker that is compatible with certain pieces of STB software and r
 a utility for showing mouse location in pixels for future autohotkey scripts
 
 ## AutoClicker
-an autohotkey scrit bound to grave key/back tick that clicks few times a second for quick button presses on remote STB instances.
+an autohotkey script bound to grave key/back tick that clicks few times a second for quick button presses on remote STB instances.
+
+## AutoCopier
+an autohotkey script bound to Home key that copies an 'expected' string in our testing software and pastes it into the 'actual' field for passed tests.
 
 ## Folders:
 ### ActiveBots
