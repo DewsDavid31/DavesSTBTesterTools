@@ -41,17 +41,18 @@ GOTO :Menu
 
 
 :Show
-:SymLoop7
-	if defined branches[%k%] (
-call echo Updating branch %%branches[%y%]%%...
+set k=0
+:SymLoop7	
 	set x=0
+	if defined branches[%k%] (
 	:SymLoop9
 	if defined devices[%x%] (
-		call echo Updating %%devices[%x%]%% to VCS Current folder ...
 		call set sub=%%devices[%x%]%%
-		call set branch=%%branches[k]%%
-		call set /A index=%numDevices% * %k% + %x%
-		call set p=%%roots[%x%]%%\%%mappings[%index%]%%xx\
+		call set branch=%%branches[%k%]%%
+		set index = 0
+		set /A index=%numDevices% * %k% + %x%
+		call set newmap=%%mappings[%index%]%%
+		call set p=%%roots[%x%]%%%newmap%xx\
 		GOTO :Search
 		:Done
 		call set /A x+=1
@@ -65,7 +66,7 @@ GOTO :Menu
 
 :Search
 set b=
-FOR /F "delims=" %%j IN ('dir "%p%\%a%" /b /ad-h /t:w /od') DO SET b=%%j
+FOR /F "delims=" %%a IN ('dir "%p%" /b /ad-h /t:w /od') DO SET b=%%a
 echo most recent %branch% software for %sub% is: %b%
 
 GOTO :Done
@@ -121,7 +122,7 @@ call set branch=%%branches[%branch_id%]%%
 set /p version= Type in version to checkout for all devices(example: C1 of PGC1):
 :SymLoop4
 if defined roots[%z%] (
-        call set /A index=%numDevices% * %branch_id% + %z% 
+        set /A index=%numDevices% * %branch_id% + %z% 
 	call set root=%%roots[%z%]%%%%mappings[%index%]%%xx\%%mappings[%index%]%%
         call set DLTarget[%z%]=%%devices[%z%]%%\%%branches[%branch_id%]%%\%%mappings[%index%]%%%version%
 	
@@ -171,7 +172,7 @@ call set branch=%%branches[%branch_id%]%%
 call echo %model% with %branch% versions: %map%
 echo %branch_id%
 echo %model_id%
-call set /A index=%numDevices% * %branch_id% + %model_id% 
+set /A index=%numDevices% * %branch_id%+ %model_id% 
 
 call set d1=%%mappings[%index%]%%xx\
 call set root=%%roots[%model_id%]%%%d1%
