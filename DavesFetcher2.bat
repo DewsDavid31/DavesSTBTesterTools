@@ -15,11 +15,10 @@ GOTO :configAgain
 )
 
 for /f "delims=" %%x in ('findstr /v /c:"//" .\configs\%config%') do (set "%%x")
+set /a "maxDev=numDevices-1"
 if not exist %VCS% mkdir %VCS%
 echo Welcome to Dave's Production Version Fetcher!
 :Menu
-set DLCart[0]=something
-set DLTarget[0]=something
 set y=0
 set k=0
 set z=0
@@ -41,26 +40,26 @@ GOTO :Menu
 
 
 :Show
+set m=0
+set d=0
+set x=0
+set r=0
 set k=0
+set b=0
+set index=0
 :SymLoop7	
-	set x=0
-	if defined branches[%k%] (
-	:SymLoop9
-	if defined devices[%x%] (
-		call set sub=%%devices[%x%]%%
-		call set branch=%%branches[%k%]%%
-		set index = 0
-		set /A index=%numDevices% * %k% + %x%
-		call set newmap=%%mappings[%index%]%%
-		call set p=%%roots[%x%]%%%newmap%xx\
-		GOTO :Search
-		:Done
-		call set /A x+=1
-		GOTO :SymLoop9
-	)
-	call set /A k+=1
-	GOTO :SymLoop7
-	)
+if defined mappings[%k%] (
+	set /a "k+=1"
+	set /a "r=k/numBranches"
+	set /a "d+=1"
+	if %d%==%maxDev% set d=0
+	call set p=%%roots[%d%]%%%%mappings[%k%]%%xx\
+	call set branch=%%branches[%r%]%%
+	call set sub=%%devices[%d%]%%
+	GOTO :Search
+	:Done
+	GOTO SymLoop7
+)
 pause
 GOTO :Menu
 
@@ -104,6 +103,10 @@ echo Copying Download Cart to VCS...
 
 
 :Cube
+set w=0
+set x=0
+set z=0
+set q=0
 echo Pick a Branch for all devices:
 :SymLoop2
 	if defined branches[%w%] (
@@ -120,17 +123,15 @@ call set branch=%%branches[%branch_id%]%%
 		GOTO :SymLoop3
 	)
 set /p version= Type in version to checkout for all devices(example: C1 of PGC1):
+set /a "index=numDevices*branch_id"
 :SymLoop4
 if defined roots[%z%] (
-        set /A index=%numDevices% * %branch_id% + %z% 
 	call set root=%%roots[%z%]%%%%mappings[%index%]%%xx\%%mappings[%index%]%%
         call set DLTarget[%z%]=%%devices[%z%]%%\%%branches[%branch_id%]%%\%%mappings[%index%]%%%version%
-	
-	
-
-	set next=%root%%version%
+	call set next=%root%%version%
 	call set DLCart[%z%]=%%next%%
 	set /a "z+=1"
+	set /a "index+=1"
         GOTO :SymLoop4
 )
 :CopyLoop2
