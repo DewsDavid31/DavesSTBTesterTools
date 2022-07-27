@@ -21,6 +21,9 @@ an autohotkey script bound to grave key/back tick that clicks few times a second
 ## AutoCopier
 an autohotkey script bound to Home key that copies an 'expected' string in our testing software and pastes it into the 'actual' field for passed tests.
 
+## AutoPasser
+an autohotkey script bound to Insert key that copies an 'expected' string in our testing software and pastes it into the 'actual' field for passed tests as well as automatically passing the step if your testing software has pass tied to Ctrl-P and tabs back to focus for rapid fire. BE CAREFUL NOT TO PASS WITHOUT LOOKING THAT'S BAD PRACTICE.
+
 ## Folders:
 ### ActiveBots
 default location of current AutoHotkey macros constructed
