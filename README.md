@@ -24,6 +24,9 @@ an autohotkey script bound to Home key that copies an 'expected' string in our t
 ## AutoPasser
 an autohotkey script bound to Insert key that copies an 'expected' string in our testing software and pastes it into the 'actual' field for passed tests as well as automatically passing the step if your testing software has pass tied to Ctrl-P and tabs back to focus for rapid fire. BE CAREFUL NOT TO PASS WITHOUT LOOKING THAT'S BAD PRACTICE.
 
+## muxAutofill
+an autohotkey script bound to END key that automatically fills in common data for an in-house application, to use you must click the 'stream file name' box first then press END, it will fill all values that don't change and presses 'run'. If you need more info, consult the more IP laden config file or myself directly.
+
 ## Folders:
 ### ActiveBots
 default location of current AutoHotkey macros constructed
