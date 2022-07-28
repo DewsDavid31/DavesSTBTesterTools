@@ -1,4 +1,6 @@
 HOME::
+send {ESC}
+send {TAB}
 send {TAB}
 send {TAB}
 send ^a
