@@ -152,6 +152,9 @@ if %acti% EQU 2 set sel=send {ENTER} echo send {DOWN} echo send {DOWN}
 if %acti% EQU 3 set sel=send {ENTER} echo send {DOWN} echo send {DOWN} echo send {DOWN}
 
 echo ~:: > %Bots%CSGBot.ahk
+echo send MouseMove 400,400 >> %Bots%CSGBot.ahk
+echo send Click >> %Bots%CSGBot.ahk
+echo send {TAB} >> %Bots%CSGBot.ahk
 echo send {ENTER} >> %Bots%CSGBot.ahk
 echo send {DOWN} >> %Bots%CSGBot.ahk
 echo send {ENTER} >> %Bots%CSGBot.ahk
