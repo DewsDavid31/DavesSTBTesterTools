@@ -85,14 +85,14 @@ echo Pick a Model:
 	)
 call set /p model_id= Selection:
 call set model=%%devices[%model_id%]%%
-set /p family= Enter a software family:
+set /p family= Enter a software family(with xs included):
 set /p version= Enter a software name:
 call set root= %%roots[%model_id%]%%
 set next= %root%\%family%\%version%
 call set DLCart[%y%]= %%next%%
 set /a "y+=1"
 set /p c= done with download cart(y/N)?: 
-if %c%==y (GOTO :CopyLoop)
+if %c%==y (GOTO :CopyLoop1)
 GOTO :Another
 :CopyLoop1
 echo Copying Download Cart to VCS...
@@ -102,7 +102,8 @@ echo Copying Download Cart to VCS...
 		set /a "z+=1"
 		GOTO :CopyLoop1
 	)
-
+pause
+GOTO :Menu
 
 :Cube
 set w=0
