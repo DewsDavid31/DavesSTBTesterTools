@@ -49,13 +49,15 @@ set b=0
 set index=0
 :SymLoop7	
 if defined mappings[%k%] (
-	set /a "k+=1"
-	set /a "r=k/numBranches"
-	set /a "d+=1"
-	if %d%==%maxDev% set d=0
+
 	call set p=%%roots[%d%]%%%%mappings[%k%]%%xx\
 	call set branch=%%branches[%r%]%%
 	call set sub=%%devices[%d%]%%
+	set /a "k+=1"
+	set /a "d+=1"
+	if %d%==%maxDev% (set d=0
+	set /a "r+=1"
+ )
 	GOTO :Search
 	:Done
 	GOTO SymLoop7
