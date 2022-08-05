@@ -15,7 +15,7 @@ GOTO :configAgain
 )
 
 for /f "delims=" %%x in ('findstr /v /c:"//" .\configs\%config%') do (set "%%x")
-set /a "maxDev=numDevices"
+set /a "maxDev=numDevices+1"
 if not exist %VCS% mkdir %VCS%
 echo Welcome to Dave's Production Version Fetcher!
 :Menu
