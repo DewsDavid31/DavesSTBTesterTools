@@ -7,9 +7,10 @@ exit
 :configAgain
 echo config files:
 FOR /F "tokens=*" %%j in ('DIR .\configs /b w*') DO (
-		ECHO %%j
+		ECHO * %%j
+                ECHO *
 )
-set /p config= Type a config you wish to use: 
+set /p config=Type the name of a .config file from above to use: 
 if not exist .\configs\%config% (echo invalid config file try again...
 GOTO :configAgain
 )
@@ -37,7 +38,6 @@ if %option% EQU 2 GOTO :Auth
 if %option% EQU 1 GOTO :Auto
 GOTO :Menu
 :Auto
-echo !WARNING this only works on configs with the dish devices in order given by template!
 echo Please open up AutoStream.exe
 pause
 echo Pick a Branch for mux:
@@ -198,7 +198,6 @@ pause
 exit
 
 :BVT
-echo !WARNING THIS CODE IS HARDCODED AND A PILE OF STEAMING GARBAGE!
 echo place your exported files from Witbe Datalab as an Excel Compatible csv into Reports\converter_input\
 pause
 echo merging...
