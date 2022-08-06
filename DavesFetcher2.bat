@@ -110,6 +110,7 @@ set w=0
 set x=0
 set z=0
 set q=0
+set root='none'
 echo Pick a Branch for all devices:
 :SymLoop2
 	if defined branches[%w%] (
@@ -119,30 +120,28 @@ echo Pick a Branch for all devices:
 	)
 call set /p branch_id= Selection:
 call set branch=%%branches[%branch_id%]%%
-:SymLoop3
-	if defined devices[%x%] (
-		call set model_id=%%devices[%x%]%%
-		set /a "x+=1"
-		GOTO :SymLoop3
-	)
 set /p version= Type in version to checkout for all devices(example: C1 of PGC1):
+echo index: %index%
 set /a "index=numDevices*branch_id"
+setlocal ENABLEDELAYEDEXPANSION
 :SymLoop4
 if defined roots[%z%] (
 	call set root=%%roots[%z%]%%%%mappings[%index%]%%xx\%%mappings[%index%]%%
-        call set DLTarget[%z%]=%%devices[%z%]%%\%%branches[%branch_id%]%%\%%mappings[%index%]%%%version%
-	call set next=%root%%version%
+        call set rootTarget=%%devices[%z%]%%\%%branches[%branch_id%]%%\%%mappings[%index%]%%
+	call set next=!root!%version%
+        call set nextTarget=!rootTarget!%version%
 	call set DLCart[%z%]=%%next%%
+        call set DLTarget[%z%]=%%nextTarget%%
 	set /a "z+=1"
-	set /a "index+=1"
+	set /a "index+=1"    
         GOTO :SymLoop4
 )
 :CopyLoop2
 echo Copying Download Cart to VCS...
 	if defined DLCart[%q%] (
                 call set pasted=%%DLTarget[%q%]%%
-		call xcopy /s/e/i/d/Y %%DLCart[%q%]%% %VCS%%pasted%
-		call echo copying %%DLCart[%q%]%% to %VCS%%pasted%
+		call xcopy /s/e/i/d/Y %%DLCart[%q%]%% %VCS%!pasted!
+		call echo copying %%DLCart[%q%]%% to %VCS%!pasted!
 		set /a "q+=1"
 		GOTO :CopyLoop2
 	) 
@@ -171,13 +170,8 @@ echo Pick a Branch:
 	)
 call set /p branch_id= Selection:
 call set branch=%%branches[%branch_id%]%%
-
-
 call echo %model% with %branch% versions: %map%
-echo %branch_id%
-echo %model_id%
 set /A index=%numDevices% * %branch_id%+ %model_id% 
-
 call set d1=%%mappings[%index%]%%xx\
 call set root=%%roots[%model_id%]%%%d1%
 
