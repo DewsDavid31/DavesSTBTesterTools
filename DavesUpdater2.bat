@@ -12,9 +12,10 @@ set b=0
 :configAgain
 echo config files:
 FOR /F "tokens=*" %%j in ('DIR .\configs /b w*') DO (
-		ECHO %%j
+		ECHO * %%j
+                ECHO *
 )
-set /p config= Type a config you wish to use: 
+set /p config= Type the name of a .config file from above to use: 
 if not exist .\configs\%config% (echo invalid config file try again...
 GOTO :configAgain
 )
