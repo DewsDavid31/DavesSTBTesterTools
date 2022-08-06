@@ -5,11 +5,12 @@ pause
 exit
 )
 :configAgain
-echo config files:
+echo your config files:
 FOR /F "tokens=*" %%j in ('DIR .\configs /b w*') DO (
-		ECHO %%j
+		ECHO * %%j
+                ECHO *
 )
-set /p config= Type a config you wish to use: 
+set /p config= Type the name of a .config file from above to use: 
 if not exist .\configs\%config% (echo invalid config file try again...
 GOTO :configAgain
 )
@@ -121,7 +122,6 @@ echo Pick a Branch for all devices:
 call set /p branch_id= Selection:
 call set branch=%%branches[%branch_id%]%%
 set /p version= Type in version to checkout for all devices(example: C1 of PGC1):
-echo index: %index%
 set /a "index=numDevices*branch_id"
 setlocal ENABLEDELAYEDEXPANSION
 :SymLoop4
