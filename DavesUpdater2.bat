@@ -23,6 +23,7 @@ for /f "delims=" %%x in ('findstr /v /c:"//" .\configs\%config%') do (set "%%x")
 set /a "maxDev=numDevices-1"
 if not exist %VCS% mkdir %VCS%
 echo Welcome to Dave's Current Production Version Updater!
+setlocal ENABLEDELAYEDEXPANSION
 :SymLoop1	
 if defined mappings[%k%] (
 	call echo Updating %%devices[%d%]%% to VCS Current folder ...
@@ -45,7 +46,7 @@ set b=
 FOR /F "delims=" %%a IN ('dir "%p%" /b /ad-h /t:w /od') DO SET b=%%a
 echo most recent %branch% software for %sub% is: %b%
 if not exist "%VCS%%sub%\%branch%\%b%" mkdir %VCS%%sub%\%branch%\%b%
-set source=%p%\%b%
+set source=!p!\!b!
 set target=%VCS%%sub%\%branch%\%b%
 xcopy /s/e/i/d/Y %source% %target%
 GOTO :Done
