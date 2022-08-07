@@ -15,7 +15,7 @@ FOR /F "tokens=*" %%j in ('DIR .\configs /b w*') DO (
 		ECHO * %%j
                 ECHO *
 )
-set /p config= Type the name of a .config file from above to use: 
+set /p config= Type the name of your cube/racks .config file from above to use: 
 if not exist .\configs\%config% (echo invalid config file try again...
 GOTO :configAgain
 )
@@ -23,7 +23,7 @@ GOTO :configAgain
 for /f "delims=" %%x in ('findstr /v /c:"//" .\configs\%config%') do (set "%%x")
 set /a "maxDev=numDevices-1"
 if not exist %VCS% mkdir %VCS%
-echo Welcome to Dave's Current Production Version Updater!
+echo Welcome to Dave's Current Release Version Updater!
 setlocal ENABLEDELAYEDEXPANSION
 :SymLoop1	
 if defined mappings[%k%] (
