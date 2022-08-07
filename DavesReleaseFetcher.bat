@@ -10,7 +10,7 @@ FOR /F "tokens=*" %%j in ('DIR .\configs /b w*') DO (
 		ECHO * %%j
                 ECHO *
 )
-set /p config= Type the name of a .config file from above to use: 
+set /p config= Type the name of your rack/cubes .config file from above to use: 
 if not exist .\configs\%config% (echo invalid config file try again...
 GOTO :configAgain
 )
