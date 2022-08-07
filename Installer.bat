@@ -22,8 +22,8 @@ echo move the config file to the configs folder!!!
 pause
 set index=0
 :AnotherDEMOBOX
-set /p serial=Enter the serial number of a box
-set /p rcvr=Enter the receiver number of a box
+set /p serial=Enter the serial number of a box: 
+set /p rcvr=Enter the receiver number of a box: 
 echo devicesSerials[%index%]=%serial% >> demo.config
 echo devicesReceiverNum[%index%]=%rcvr% >> demo.config
 set /a "index+=1"
