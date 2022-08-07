@@ -5,7 +5,7 @@ pause
 exit
 )
 :configAgain
-echo config files:
+echo select your rack/cubes config files:
 FOR /F "tokens=*" %%j in ('DIR .\configs /b w*') DO (
 		ECHO * %%j
                 ECHO *
@@ -26,8 +26,7 @@ set q=0
 :Another
 set x=0
 set w=0
-echo Welcome to Dave's Manual Bot Maker!
-echo Warning: Remember to have config.config set to the cube you need!
+echo Welcome to Dave's Keyboard Macro Maker!
 :Menu
 echo 1: AutoStream Bot(MUX is discontinued)
 echo 2: CSG Authorization Bot
