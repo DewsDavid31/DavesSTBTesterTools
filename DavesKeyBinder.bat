@@ -31,7 +31,11 @@ echo Welcome to Dave's Keyboard Macro Maker!
 echo 1: AutoStream Bot(MUX is discontinued)
 echo 2: CSG Authorization Bot
 echo 3: BVT csv merger and transformer
+echo 4: Failure analysis duplicate removal
+echo 5: Quit
 set /p option= Pick a bot option:
+if %option% EQU 5 GOTO :Quit
+if %option% EQU 4 GOTO :Analysis
 if %option% EQU 3 GOTO :BVT
 if %option% EQU 2 GOTO :Auth
 if %option% EQU 1 GOTO :Auto
@@ -141,7 +145,7 @@ START %Bots%AutoStreamBot.ahk
 
 echo Mux Bot is ready to run! Press ~ to start bot
 pause
-exit
+GOTO :Menu
 
 :Auth
 set /p desc= Enter CSG description for all boxes: 
@@ -194,7 +198,7 @@ START %Bots%CSGBot.ahk
 
 echo Done! Created bot for csg request, just open CSG request form SELECT NONE ON FIRST FIELD and press Tilde!
 pause
-exit
+GOTO :Menu
 
 :BVT
 echo place your exported files from Witbe Datalab as an Excel Compatible csv into Reports\converter_input\
@@ -211,5 +215,22 @@ echo now go to FILE,IMPORT,UPLOAD and upload this file in REPORTS called 'import
 echo with IMPORT LOCATION with REPLACE DATA AT SELECTED CELL and SEPARATOR TYPE at COMMA
 pause
 echo Automation tests of BVT sheet are complete! Happy manual testing!
+pause
+GOTO :Menu
+
+
+:Analysis
+echo place your exported files from Witbe Datalab as a PURE csv into Reports\converter_input\
+pause
+echo merging...
+copy %csvIn%*.csv  %csvIn%merged.csv
+echo ensure the csv is named 'merged.csv' it should be by default!
+pause
+echo converting...
+powershell .\BVTAnalysisConverter.ps1
+echo done! Please import the file in converter_output into your report and work through failures.
+pause
+GOTO :Menu
+:Quit
 pause
 exit
