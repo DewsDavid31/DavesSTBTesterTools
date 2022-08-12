@@ -2,7 +2,7 @@
 A set of personal manual testing tools designed to make trivial updates and housekeeping faster.
 
 # How to install:
-## 1. Git clone or Download as Zip file and unpack wherever you want the tools to be
+## 1. Git clone or Download as Zip file and unpack where ever you want the tools to be
 ## 2. Double-click Installer.bat
 ## 3. Select the installer method to be used. (currently DISH and CUSTOM are not supported for a few days)
 ## 4. Enter the serial numbers and receiver id's of the boxes you have for Keybindings to Autofill your box information
