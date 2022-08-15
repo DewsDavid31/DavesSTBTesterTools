@@ -51,7 +51,7 @@ set index=0
 :SymLoop7	
 if defined mappings[%k%] (
 
-	call set p=%%roots[%d%]%%%%mappings[%k%]%%xx\
+	call set p=%%roots[%d%]%%%%mappings[%k%]%%%ending%\
 	call set branch=%%branches[%r%]%%
 	call set sub=%%devices[%d%]%%
 	set /a "k+=1"
@@ -126,7 +126,7 @@ set /a "index=numDevices*branch_id"
 setlocal ENABLEDELAYEDEXPANSION
 :SymLoop4
 if defined roots[%z%] (
-	call set root=%%roots[%z%]%%%%mappings[%index%]%%xx\%%mappings[%index%]%%
+	call set root=%%roots[%z%]%%%%mappings[%index%]%%%ending%\%%mappings[%index%]%%
         call set rootTarget=%%devices[%z%]%%\%%branches[%branch_id%]%%\%%mappings[%index%]%%
 	call set next=!root!%version%
         call set nextTarget=!rootTarget!%version%
@@ -172,7 +172,7 @@ call set /p branch_id= Selection:
 call set branch=%%branches[%branch_id%]%%
 call echo %model% with %branch% versions: %map%
 set /A index=%numDevices% * %branch_id%+ %model_id% 
-call set d1=%%mappings[%index%]%%xx\
+call set d1=%%mappings[%index%]%%%ending%\
 call set root=%%roots[%model_id%]%%%d1%
 
 FOR /f "tokens=*" %%i in ('DIR %root% /a:d /b w*') DO (ECHO %%i\)
