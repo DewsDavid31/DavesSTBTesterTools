@@ -1,6 +1,6 @@
 @echo off
-if not exist .\configs (mkdir .\configs
-echo .\configs does not exist, make that folder and add a config file!
+if not exist configs (mkdir .\configs
+echo configs does not exist, make that folder and add a config file!
 pause
 exit
 )
@@ -28,7 +28,7 @@ setlocal ENABLEDELAYEDEXPANSION
 :SymLoop1	
 if defined mappings[%k%] (
 	call echo Updating %%devices[%d%]%% to VCS Current folder ...
-	call set p=%%roots[%d%]%%%%mappings[%k%]%%xx\
+	call set p=%%roots[%d%]%%%%mappings[%k%]%%%ending%\
 	call set branch=%%branches[%r%]%%
 	call set sub=%%devices[%d%]%%
 	set /a "k+=1"
