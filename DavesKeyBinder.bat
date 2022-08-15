@@ -1,6 +1,6 @@
 @echo off
 if not exist .\configs (mkdir .\configs
-echo .\configs does not exist, make that folder and add a config file!
+echo configs does not exist, make that folder and add a config file!
 pause
 exit
 )
@@ -201,11 +201,13 @@ pause
 GOTO :Menu
 
 :BVT
-echo place your exported files from Witbe Datalab as an Excel Compatible csv into Reports\converter_input\
+echo place your exported files from Witbe Datalab as an Excel Compatible csv into %csvIn%
 pause
 echo merging...
 copy %csvIn%*.csv  %csvIn%merged.csv
 echo ensure the csv is named 'merged.csv' it should be by default!
+pause
+echo also remove any extra header lines, they should stick out from the block of comma values in notepad!
 pause
 echo converting...
 powershell .\BVTConverter.ps1
@@ -220,7 +222,7 @@ GOTO :Menu
 
 
 :Analysis
-echo place your exported files from Witbe Datalab as a PURE csv into Reports\converter_input\
+echo place your exported files from Witbe Datalab as a PURE csv into %csvOut%
 pause
 echo merging...
 copy %csvIn%*.csv  %csvIn%merged.csv
