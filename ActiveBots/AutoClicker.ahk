@@ -1,3 +1,4 @@
+;`
 Pause ON
 
 loop
@@ -7,3 +8,4 @@ Sleep 100
 }
 
 `::Pause
+
