@@ -32,9 +32,11 @@ echo 1: AutoStream Bot(MUX is discontinued)
 echo 2: CSG Authorization Bot
 echo 3: BVT csv merger and transformer
 echo 4: Failure analysis duplicate removal
-echo 5: Quit
+echo 5: Show me my key bindings
+echo 6: Quit
 set /p option= Pick a bot option:
-if %option% EQU 5 GOTO :Quit
+if %option% EQU 6 GOTO :Quit
+if %option% EQU 5 GOTO :Bindings
 if %option% EQU 4 GOTO :Analysis
 if %option% EQU 3 GOTO :BVT
 if %option% EQU 2 GOTO :Auth
@@ -233,6 +235,18 @@ powershell .\BVTAnalysisConverter.ps1
 echo done! Please import the file in converter_output into your report and work through failures.
 pause
 GOTO :Menu
+
+
+
+:Bindings
+SETLOCAL EnableDelayedExpansion
+FOR /F "tokens=*" %%j in ('DIR .\ActiveBots\*.ahk /b w*') DO (
+		set /p binding=< .\ActiveBots\%%j
+                ECHO * %%j bound to key: !binding!
+                ECHO *
+)
+GOTO :Menu
+
 :Quit
 pause
 exit
