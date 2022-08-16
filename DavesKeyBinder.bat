@@ -242,7 +242,7 @@ GOTO :Menu
 SETLOCAL EnableDelayedExpansion
 set bindIndex=0
 set repKey = "Help::"
-echo NOTE: %repKey% is the key used to make macros unbound to any key
+echo NOTE help is the key used to make macros unbound to any key
 FOR /F "tokens=*" %%j in ('DIR %Bots%\*.ahk /b w*') DO (
 		set /p binding=< %Bots%\%%j
                 ECHO *!bindIndex!: %%j bound to key: !binding!
