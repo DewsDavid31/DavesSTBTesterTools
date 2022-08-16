@@ -293,6 +293,7 @@ powershell -Command "(Get-Content %targetFile% -Raw) -Replace [regex]::Escape('%
 if !mapPrompt! EQU 1 echo %targetFile% unbound! 
 if !mapPrompt! EQU 2 echo %targetFile% bound to %repKey%!
 start %targetFile%
+echo %repKey% Hotkey active!
 GOTO :Bindings
 :Quit
 exit
