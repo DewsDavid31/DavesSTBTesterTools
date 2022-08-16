@@ -292,7 +292,7 @@ call set targetBind=%%currentBind[!bindPrompt!]%%
 powershell -Command "(Get-Content %targetFile% -Raw) -Replace [regex]::Escape('%targetBind%'),[regex]::Escape('%repKey%::') | Set-Content %targetFile%"
 if !mapPrompt! EQU 1 echo %targetFile% unbound! 
 if !mapPrompt! EQU 2 echo %targetFile% bound to %repKey%!
-start %Bots%/%targetFile%
+start %targetFile%
 GOTO :Bindings
 :Quit
 exit
