@@ -240,13 +240,58 @@ GOTO :Menu
 
 :Bindings
 SETLOCAL EnableDelayedExpansion
-FOR /F "tokens=*" %%j in ('DIR .\ActiveBots\*.ahk /b w*') DO (
-		set /p binding=< .\ActiveBots\%%j
-                ECHO * %%j bound to key: !binding!
+set bindIndex=0
+set repKey = "Help::"
+echo NOTE: %repKey% is the key used to make macros unbound to any key
+FOR /F "tokens=*" %%j in ('DIR %Bots%\*.ahk /b w*') DO (
+		set /p binding=< %Bots%\%%j
+                ECHO *!bindIndex!: %%j bound to key: !binding!
                 ECHO *
+                set boundFiles[!bindIndex!]=%%j
+                set currentBind[!bindIndex!]=!binding!
+                set /a "bindIndex+=1"
 )
-GOTO :Menu
-
+ECHO !bindIndex!: Quit
+set /p bindPrompt=Select a binding to modify or !bindIndex! to quit: 
+IF /i %bindPrompt% EQU !bindIndex! GOTO :Menu
+echo 1. Delete Mapping
+echo 2. Map to a new key
+echo 3. Exit
+set /p mapPrompt=Select and option: 
+IF %mapPrompt% EQU 1 GOTO :DelMap
+IF %mapPrompt% EQU 2 GOTO :ReMap
+IF %mapPrompt% EQU 3 GOTO :Bindings
+GOTO :Bindings
+:DelMap
+set repKey="Help"
+GOTO :Overwrite
+:ReMap
+echo Valid keys:
+echo CapsLock
+echo ScrollLock 
+echo Insert
+echo Home
+echo End
+echo PgUp
+echo pgDn
+echo F1 or type any F<number>
+echo LWin
+echo LControl
+echo LAlt
+echo RAlt
+echo Media_Play_Pause
+echo Media_Stop
+echo PrintScreen
+set /p newKey=Enter key to bind from above CASE SENSITIVE!: 
+set repKey=%newKey%
+GOTO :Overwrite
+:Overwrite
+set writeIndex=0
+call set targetFile=%Bots%\%%boundFiles[!bindPrompt!]%%
+call set targetBind=%%currentBind[!bindPrompt!]%%
+powershell -Command "(Get-Content %targetFile% -Raw) -Replace [regex]::Escape('%targetBind%'),[regex]::Escape('%repKey%::') | Set-Content %targetFile%"
+if !mapPrompt! EQU 1 echo %targetFile% unbound! 
+if !mapPrompt! EQU 2 echo %targetFile% bound to %repKey%!
+GOTO :Bindings
 :Quit
-pause
 exit
