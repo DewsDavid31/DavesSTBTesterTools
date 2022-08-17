@@ -3,7 +3,7 @@ A set of personal manual testing tools designed to make trivial updates and hous
 
 # How to install:
 ## 1. Git clone or Download as Zip file and unpack where ever you want the tools to be
-## 2. Get the config file required from my link here: https://drive.google.com/drive/folders/18_xPVujysROK0kUrtEp94k_iKbLofKvh its unlocked only to DISH employees, or copy and modify the template config included in the ZIP if you don't have the access.
+## 2. Get the config file(DISH.config) required from my link here: https://drive.google.com/drive/folders/18_xPVujysROK0kUrtEp94k_iKbLofKvh its unlocked only to DISH employees, or copy and modify the template config included in the ZIP if you don't have the access.
 ## 3. Add serial box serials/numbers as instructed on comments in config file if you want to use hotkeys
 ## 4. You are good to go!
 
