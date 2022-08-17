@@ -79,7 +79,7 @@ if defined mappings[%k%] (
 	set /a "r+=1"
  )
 	GOTO :Search
-	:Done
+	:Done1
 	GOTO SymLoop7
 )
 pause
@@ -89,8 +89,7 @@ GOTO :FetchMenu
 set b=
 FOR /F "delims=" %%a IN ('dir "%p%" /b /ad-h /t:w /od') DO SET b=%%a
 echo most recent %branch% software for %sub% is: %b%
-
-GOTO :Done
+GOTO :Done1
 pause
 exit
 
