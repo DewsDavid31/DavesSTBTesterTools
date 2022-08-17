@@ -3,12 +3,9 @@ A set of personal manual testing tools designed to make trivial updates and hous
 
 # How to install:
 ## 1. Git clone or Download as Zip file and unpack where ever you want the tools to be
-## 2. Double-click Installer.bat
-## 3. Select the installer method to be used. (currently DISH and CUSTOM are not supported for a few days)
-## 4. Enter the serial numbers and receiver id's of the boxes you have for Keybindings to Autofill your box information
-## 5. If you picked CUSTOM: fill out the remaining mapping information of your company's system.
-## 6. If anything is wrong later, you can change the variables in the config file using notepad, comments will help you.
-## 7. You are good to go!
+## 2. Get the config file required from my link if you are in my company, or copy and modify the template config included in the ZIP
+## 3. Add serial box serials/numbers as instructed on comments in config file if you want to use hotkeys
+## 4. You are good to go!
 
 # How to use:
 Whenever a new release of STB software is up, run TestingCompanion.bat, enter the cube/rack you wish to update by typing its associated config file, or the general installed config file for your method (ex: DISH.config) and it will automatically show you the most recent versions of each STB and download it to your Desktop VCS file. If you want to change where your STB files go, just change 'VCS=.\VCS' to be wherever you want the files to go. They will be installed sorted by Device type and Software Branch name in nested folders.
