@@ -214,6 +214,43 @@ echo Copying Download Cart to VCS...
  
 pause
 GOTO :FetchMenu
+:Update
+set d=0
+set x=0
+set r=0
+set k=0
+set b=0
+set /a "maxDev=numDevices-1"
+if not exist %VCS% mkdir %VCS%
+echo Welcome to Dave's Current Release Version Updater!
+setlocal ENABLEDELAYEDEXPANSION
+:SymLoop21	
+if defined mappings[%k%] (
+	call echo Updating %%devices[%d%]%% to VCS Current folder ...
+	call set p=%%roots[%d%]%%%%mappings[%k%]%%%ending%\
+	call set branch=%%branches[%r%]%%
+	call set sub=%%devices[%d%]%%
+	set /a "k+=1"
+	set /a "d+=1"
+	if %d%==%maxDev% (set d=0
+	set /a "r+=1"
+ )
+	GOTO :Search2
+	:Done
+	GOTO SymLoop21
+)
+pause
+exit
+:Search2
+set b=
+FOR /F "delims=" %%a IN ('dir "%p%" /b /ad-h /t:w /od') DO SET b=%%a
+echo most recent %branch% software for %sub% is: %b%
+if not exist "%VCS%%sub%\%branch%\%b%" mkdir %VCS%%sub%\%branch%\%b%
+set source=!p!\!b!
+set target=%VCS%%sub%\%branch%\%b%
+xcopy /s/e/i/d/Y %source% %target%
+GOTO :Done
+GOTO :FetchMenu
 :MacroMenu
 echo 1: AutoStream Bot(MUX is discontinued)
 echo 2: CSG Authorization Bot
