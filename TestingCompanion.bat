@@ -239,7 +239,7 @@ if defined mappings[%k%] (
 	GOTO SymLoop21
 )
 pause
-exit
+GOTO :FetchMenu
 :Search2
 set b=
 FOR /F "delims=" %%a IN ('dir "%p%" /b /ad-h /t:w /od') DO SET b=%%a
@@ -373,6 +373,7 @@ pause
 GOTO :MacroMenu
 
 :Auth
+set v=0
 set /p desc= Enter CSG description for all boxes: 
 set /p acti= choose 1. Add, 2.Remove, 3.Update :
 if %acti% EQU 1 set sel=send {ENTER} echo send {DOWN}
@@ -392,7 +393,7 @@ echo send {ENTER} >> %Bots%CSGBot.ahk
 echo send {DOWN} >> %Bots%CSGBot.ahk
 echo send {ENTER} >> %Bots%CSGBot.ahk
 echo send {TAB} >> %Bots%CSGBot.ahk
-:Symloop3
+:Symloop31
 if defined devicesReceiverNum[%v%] (
 		echo send {ENTER} >> %Bots%CSGBot.ahk
 		echo sleep 6000 >> %Bots%CSGBot.ahk
@@ -414,7 +415,7 @@ if defined devicesReceiverNum[%v%] (
 		echo send {TAB} >> %Bots%CSGBot.ahk
 		echo send {ENTER} >> %Bots%CSGBot.ahk
 		set /a "v+=1"
-		GOTO :SymLoop3
+		GOTO :SymLoop31
 	)
 
 echo Esc:: >> %Bots%CSGBot.ahk
