@@ -48,9 +48,12 @@ echo 2: Fetch a Single Release
 echo 3: Fetch an Exotic Release(no known intent, but known software name) 
 echo 4: Show me every current release version
 echo 5: Fetch Updates
-echo 6: Exit
+echo 6: put a watch program up to notify me when a new version is complete
+echo 7: Exit
 set /p option= Pick an option:
-if %option% EQU 6 GOTO :Quit
+
+if %option% EQU 7 GOTO :Quit
+if %option% EQU 6 GOTO :Watch
 if %option% EQU 5 GOTO :Update
 if %option% EQU 4 GOTO :Show
 if %option% EQU 3 GOTO :Exotic
@@ -58,6 +61,38 @@ if %option% EQU 2 GOTO :Single
 if %option% EQU 1 GOTO :Cube
 GOTO :FetchMenu
 
+:Watch
+set w=0
+set z=0
+set index=0
+echo Pick a Branch for to watch for updates:
+:SymLoop25
+	if defined branches[%w%] (
+		call echo %w%: %%branches[%w%]%%
+		set /a "w+=1"
+		GOTO :SymLoop25
+	)
+setlocal ENABLEDELAYEDEXPANSION
+set /p watchedBranch= Selected branch:
+set /p vers= type a version(example A1):
+call set branchName= %%branches[!watchedBranch!]%%
+echo ^@echo off > %Bots%\watch.bat
+echo ^:oneleft >> %Bots%\watch.bat
+echo ^echo waiting to recheck %branchName% %vers%... >> %Bots%watch.bat
+echo timeout /t 5 >> %Bots%\watch.bat
+ :SymLoop41
+if defined roots[%z%] (
+	call set root=%%roots[%z%]%%%%mappings[%index%]%%%ending%\%%mappings[%index%]%%
+	call set next=!root!%vers%
+        echo if not exist !next!\USB\md5bin.txt goto oneleft >> %Bots%\watch.bat
+	set /a "z+=1"
+	set /a "index+=1"    
+        GOTO :SymLoop41
+)
+echo ^call ^echo %branchName% version %vers% is ready in the repo!! >> %Bots%\watch.bat
+start %Bots%\watch.bat
+echo watch program set for %watchedBranch% version %vers%, this opened terminal will notify you when the version is available
+goto :FetchMenu
 
 :Show
 set m=0
