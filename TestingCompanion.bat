@@ -52,7 +52,7 @@ echo 6: put a watch program up to notify me when a new version is complete
 echo 7: Exit
 set /p option= Pick an option:
 
-if %option% EQU 7 GOTO :Quit
+if %option% EQU 7 GOTO :Menu
 if %option% EQU 6 GOTO :Watch
 if %option% EQU 5 GOTO :Update
 if %option% EQU 4 GOTO :Show
@@ -79,7 +79,7 @@ call set branchName= %%branches[!watchedBranch!]%%
 echo ^@echo off > %Bots%\watch.bat
 echo ^:oneleft >> %Bots%\watch.bat
 echo ^echo waiting to recheck %branchName% %vers%... >> %Bots%watch.bat
-echo timeout /t 5 >> %Bots%\watch.bat
+echo timeout /t 60 >> %Bots%\watch.bat
  :SymLoop41
 if defined roots[%z%] (
 	call set root=%%roots[%z%]%%%%mappings[%index%]%%%ending%\%%mappings[%index%]%%
