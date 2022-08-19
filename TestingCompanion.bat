@@ -30,9 +30,11 @@ set v=0
 set watchIndex=0
 echo 1: Fetch a Release/Releases
 echo 2: Set Keyboard Macros/BVT csv scrubbing
-echo 3: Exit
+echo 3: Change Config File
+echo 4: Exit
 set /p option= Pick an option:
-if %option% EQU 3 GOTO :Quit
+if %option% EQU 4 GOTO :Quit
+if %option% EQU 3 GOTO :configAgain
 if %option% EQU 2 GOTO :MacroMenu
 if %option% EQU 1 GOTO :FetchMenu
 GOTO :Menu
