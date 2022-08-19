@@ -540,7 +540,7 @@ echo Home
 echo End
 echo PgUp
 echo pgDn
-echo F1 or type any F<number>
+echo F1 or type any F with a number
 echo LWin
 echo LControl
 echo LAlt
