@@ -27,6 +27,7 @@ set q=0
 set x=0
 set w=0
 set v=0
+set watchIndex=0
 echo 1: Fetch a Release/Releases
 echo 2: Set Keyboard Macros/BVT csv scrubbing
 echo 3: Exit
@@ -76,21 +77,30 @@ setlocal ENABLEDELAYEDEXPANSION
 set /p watchedBranch= Selected branch:
 set /p vers= type a version(example A1):
 call set branchName= %%branches[!watchedBranch!]%%
-echo ^@echo off > %Bots%\watch.bat
-echo ^:oneleft >> %Bots%\watch.bat
-echo ^echo waiting to recheck %branchName% %vers%... >> %Bots%watch.bat
-echo timeout /t 60 >> %Bots%\watch.bat
+echo ^@echo off > %Bots%\watch!watchIndex!.bat
+echo ^:oneleft >> %Bots%\watch!watchIndex!.bat
+echo ^echo waiting to recheck %branchName% %vers%... >> %Bots%watch!watchIndex!.bat
+echo ^set failed=ff>> %Bots%\watch!watchIndex!.bat
+echo timeout /t 60 >> %Bots%\watch!watchIndex!.bat
  :SymLoop41
 if defined roots[%z%] (
 	call set root=%%roots[%z%]%%%%mappings[%index%]%%%ending%\%%mappings[%index%]%%
 	call set next=!root!%vers%
-        echo if not exist !next!\USB\md5bin.txt goto oneleft >> %Bots%\watch.bat
+        echo ^set snapexist=t>> %Bots%\watch!watchIndex!.bat
+        echo ^set nonsnap=t>> %Bots%\watch!watchIndex!.bat
+        echo if not exist !next!\USB\md5bin.txt ^set nonsnap=f>> %Bots%\watch!watchIndex!.bat
+        echo if not exist !next!\md5.txt ^set snapexist=f>> %Bots%\watch!watchIndex!.bat
+        echo ^set oredexist=%%nonsnap%%%%snapexist%%>> %Bots%\watch!watchIndex!.bat
+        echo if %%oredexist%%==%%failed%% goto oneleft>> %Bots%\watch!watchIndex!.bat
 	set /a "z+=1"
 	set /a "index+=1"    
         GOTO :SymLoop41
 )
-echo ^call ^echo %branchName% version %vers% is ready in the repo!! >> %Bots%\watch.bat
-start %Bots%\watch.bat
+echo ^echo %branchName% version %vers% is ready in the repo!! >> %Bots%\watch!watchIndex!.bat
+echo ^pause >> %Bots%\watch!watchIndex!.bat
+echo ^exit >> %Bots%\watch!watchIndex!.bat
+start %Bots%\watch!watchIndex!.bat
+set /a "watchIndex+=1"
 echo watch program set for %watchedBranch% version %vers%, this opened terminal will notify you when the version is available
 goto :FetchMenu
 
