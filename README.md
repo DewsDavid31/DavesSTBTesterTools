@@ -51,6 +51,6 @@ a demo repository to use demo.config if you just want to see the tool work.
 
 ## Limitations:
 1. If a family of software goes by the same name, but its version are bounded such as software in 2015 being ABA1 to ABA3 but a new version in present day ABA4 is called by another product name, the fetcher can't know the difference and will fetch ABA4 for both the 2015 name and the present name and store them in both folders.
-2. Regex isn't compatible with endings environment variable, and only a <family><ending>*\<family><version>* is the possible architecture of the repo.
+2. Regex isn't compatible with endings environment variable, and only a <family><ending>\<family><version> of the same string size is the possible architecture of the repo.
 3. The repo must be a drive that is accessible.
 4. config files can't know the number of items in them and will naively overwrite previous variables if written again. Use provided numberOf... variables to fix this.
