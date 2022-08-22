@@ -49,7 +49,7 @@ default location of local versions of STB software sorted by device and then rel
 ### test_repo
 a demo repository to use demo.config if you just want to see the tool work.
 
-##Limitations:
+## Limitations:
 1. If a family of software goes by the same name, but its version are bounded such as software in 2015 being ABA1 to ABA3 but a new version in present day ABA4 is called by another product name, the fetcher can't know the difference and will fetch ABA4 for both the 2015 name and the present name and store them in both folders.
 2. Regex isn't compatible with endings environment variable, and only a <family><ending>*\<family><version>* is the possible architecture of the repo.
 3. The repo must be a drive that is accessible.
