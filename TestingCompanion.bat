@@ -302,7 +302,7 @@ echo 1: AutoStream Bot(MUX is discontinued)
 echo 2: CSG Authorization Bot
 echo 3: BVT csv transformer
 echo 4: BVT csv merger and duplicate removal
-echo 5: Show me my key bindings
+echo 5: Show/edit my keyboard macro bindings
 echo 6: Quit
 set /p option= Pick a bot option:
 if %option% EQU 6 GOTO :Menu
@@ -522,13 +522,15 @@ FOR /F "tokens=*" %%j in ('DIR %Bots%\*.ahk /b w*') DO (
 ECHO !bindIndex!: Quit
 set /p bindPrompt=Select a binding to modify or !bindIndex! to quit: 
 IF /i %bindPrompt% EQU !bindIndex! GOTO :Menu
-echo 1. Delete Mapping
+echo 1. Delete this Mapping
 echo 2. Map to a new key
-echo 3. Exit
+echo 3. Start this key binding
+echo 4. Exit
 set /p mapPrompt=Select and option: 
 IF %mapPrompt% EQU 1 GOTO :DelMap
 IF %mapPrompt% EQU 2 GOTO :ReMap
-IF %mapPrompt% EQU 3 GOTO :Bindings
+IF %mapPrompt% EQU 3 GOTO :startBind
+IF %mapPrompt% EQU 4 GOTO :Bindings
 GOTO :Bindings
 :DelMap
 set repKey="Help"
@@ -562,6 +564,12 @@ if !mapPrompt! EQU 1 echo %targetFile% unbound!
 if !mapPrompt! EQU 2 echo %targetFile% bound to %repKey%!
 start %targetFile%
 echo %repKey% Hotkey active!
+GOTO :Bindings
+:startBind
+call set targetFile=%Bots%\%%boundFiles[!bindPrompt!]%%
+call set targetBind=%%currentBind[!bindPrompt!]%%
+start %targetFile%
+echo macro on %targetBind% key active!
 GOTO :Bindings
 :Quit
 exit
