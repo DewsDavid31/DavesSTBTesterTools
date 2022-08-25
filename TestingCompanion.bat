@@ -423,10 +423,10 @@ GOTO :MacroMenu
 set v=0
 set /p desc= Enter CSG description for all boxes: 
 set /p acti= choose 1. Add, 2.Remove, 3.Update 4.Collection Hit :
-if %acti% EQU 1 set sel=send {ENTER} echo send {DOWN}
-if %acti% EQU 2 set sel=send {ENTER} echo send {DOWN} echo send {DOWN}
-if %acti% EQU 3 set sel=send {ENTER} echo send {DOWN} echo send {DOWN} echo send {DOWN}
-if %acti% EQU 4 set sel=send {ENTER} echo send {DOWN} echo send {DOWN} echo send {DOWN}
+if %acti% EQU 1 set sel=send {ENTER} send {DOWN}
+if %acti% EQU 2 set sel=send {ENTER} send {DOWN} send {DOWN}
+if %acti% EQU 3 set sel=send {ENTER} send {DOWN} send {DOWN} send {DOWN}
+if %acti% EQU 4 set sel=send {ENTER} send {DOWN} send {DOWN} send {DOWN}
 echo ~:: > %Bots%CSGBot.ahk
 echo send MouseMove 400,400 >> %Bots%CSGBot.ahk
 echo send Click >> %Bots%CSGBot.ahk
@@ -438,7 +438,7 @@ echo send {TAB} >> %Bots%CSGBot.ahk
 echo send {TAB} >> %Bots%CSGBot.ahk
 echo send {ENTER} >> %Bots%CSGBot.ahk
 echo send {DOWN} >> %Bots%CSGBot.ahk
-if %acti% EQU 4 echo send {DOWN}>> %Bots%CSGBot.ahk
+if %acti% EQU 4 echo send {DOWN} >> %Bots%CSGBot.ahk
 echo send {ENTER} >> %Bots%CSGBot.ahk
 echo send {TAB} >> %Bots%CSGBot.ahk
 if %acti% EQU 4 echo send {ENTER}>> %Bots%CSGBot.ahk
