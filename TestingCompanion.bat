@@ -423,6 +423,7 @@ GOTO :MacroMenu
 set v=0
 set /p desc= Enter CSG description for all boxes: 
 set /p acti= choose 1. Add, 2.Remove, 3.Update 4.Collection Hit :
+set /p cheatsheet= choose 1.RECOMMENDED Use only device 0 for inventory's sanity 2.Let macro enter every single device :
 if %acti% EQU 1 set sel=send {ENTER} send {DOWN}
 if %acti% EQU 2 set sel=send {ENTER} send {DOWN} send {DOWN}
 if %acti% EQU 3 set sel=send {ENTER} send {DOWN} send {DOWN} send {DOWN}
@@ -465,19 +466,20 @@ if defined devicesReceiverNum[%v%] (
 		echo send {TAB} >> %Bots%CSGBot.ahk
 		echo send {TAB} >> %Bots%CSGBot.ahk
 		echo send %desc% >> %Bots%CSGBot.ahk
+		if %cheatsheet% EQU 1 echo send .Do this to whole cube this receiver is part of. >> %Bots%CSGBot.ahk
 		echo send {TAB} >> %Bots%CSGBot.ahk
 		echo send {TAB} >> %Bots%CSGBot.ahk
 		echo send {ENTER} >> %Bots%CSGBot.ahk
 		set /a "v+=1"
+                if %cheatsheet% EQU 1 GOTO :skiploop31
 		GOTO :SymLoop31
 	)
-
+:skiploop31
 echo Esc:: >> %Bots%CSGBot.ahk
 echo ExitApp >> %Bots%CSGBot.ahk
 START %Bots%CSGBot.ahk
 
 echo Done! Created bot for csg request, just open CSG request form SELECT NONE ON FIRST FIELD and press Tilde!
-echo also remove any extra header lines, they should stick out from the block of comma values in notepad!
 pause
 GOTO :MacroMenu
 
@@ -488,6 +490,7 @@ set /p csvFile=type name of BVT file in %csvIn%:
 pause
 echo converting...
 powershell .\BVTConverter.ps1
+echo also remove any extra header lines, they should stick out from the block of comma values in notepad!
 echo done! please select only the fields from '369' to end of automated boxes
 pause
 echo now go to FILE,IMPORT,UPLOAD and upload this file in %csvIn% called 'import_as_data.csv'
@@ -503,8 +506,10 @@ set /p csvFile=type name of BVT file in %csvIn%:
 pause
 echo merging...
 copy %csvIn%*.csv  %csvIn%merged.csv
+echo delete witbes silly "sep=," and any extra label headers shown as "Time;..."
+pause
 echo making sure file is pure csv...
-powershell -Command "(Get-Content '%csvIn%merged.csv' -Raw) -Replace [regex]::Escape(';'),[regex]::Escape(',') | Set-Content %csvIn%merged.csv"pause
+powershell -Command "(Get-Content '%csvIn%merged.csv' -Raw) -Replace [regex]::Escape(';'),[regex]::Escape(',') | Set-Content '%csvIn%merged.csv'"pause
 echo stripping of duplicates...
 powershell -Command "Import-Csv '[regex]::Escape(%csvIn%%csvFile%)' -Delimiter "," -Header "time","unused", "deviceName","unused2", "scenarioName", "unused3","status" | sort deviceName,scenarioName -Unique | Set-Content -Path '[regex]::Escape(%csvIn%%csvFile%)'"
 echo done!
