@@ -506,12 +506,17 @@ set /p csvFile=type name of BVT file in %csvIn%:
 pause
 echo merging...
 copy %csvIn%*.csv  %csvIn%merged.csv
-echo delete witbes silly "sep=," and any extra label headers shown as "Time;..."
+echo deleting witbes silly "sep=,"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('sep=,'),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('sep=;'),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
 pause
 echo making sure file is pure csv...
-powershell -Command "(Get-Content '%csvIn%merged.csv' -Raw) -Replace [regex]::Escape(';'),[regex]::Escape(',') | Set-Content '%csvIn%merged.csv'"pause
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape(';'),[regex]::Escape(',') | Set-Content %csvIn%merged.csv"
 echo stripping of duplicates...
-powershell -Command "Import-Csv '[regex]::Escape(%csvIn%%csvFile%)' -Delimiter "," -Header "time","unused", "deviceName","unused2", "scenarioName", "unused3","status" | sort deviceName,scenarioName -Unique | Set-Content -Path '[regex]::Escape(%csvIn%%csvFile%)'"
+powershell -Command "Import-Csv %csvIn%merged.csv -Delimiter ',' -Header "time","unused", "deviceName","unused2", "scenarioName", "unused3","status" | sort deviceName,scenarioName -Unique | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape(';'),[regex]::Escape(',') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('@{'),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('}'),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
 echo done!
 pause
 GOTO :MacroMenu
