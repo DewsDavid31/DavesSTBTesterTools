@@ -54,3 +54,4 @@ a demo repository to use demo.config if you just want to see the tool work.
 2. Regex isn't compatible with endings environment variable, and only a (family)(Ending)\(family)(version)\ of the same string size is the possible architecture of the repo.
 3. The repo must be a drive that is accessible.
 4. config files can't know the number of items in them and will naively overwrite previous variables if written again. Use provided numberOf... variables to fix this.
+5. Whitespace in config files beyond a NEWLINE character will be read and ignored, but will echo all environment variables
