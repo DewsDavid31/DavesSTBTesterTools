@@ -502,7 +502,6 @@ GOTO :MacroMenu
 
 
 :Strip
-set /p csvFile=type name of BVT file in %csvIn%: 
 pause
 echo merging...
 copy %csvIn%*.csv  %csvIn%merged.csv
