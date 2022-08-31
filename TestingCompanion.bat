@@ -507,7 +507,7 @@ echo with IMPORT LOCATION with REPLACE DATA AT SELECTED CELL and SEPARATOR TYPE 
 pause
 echo Automation tests of BVT sheet are complete! Happy manual testing!
 pause
-GOTO :MacroMenu
+GOTO :CSVMenu
 
 
 :Strip
@@ -527,7 +527,7 @@ powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Esca
 powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('}'),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
 echo done!
 pause
-GOTO :MacroMenu
+GOTO :CSVMenu
 
 
 
