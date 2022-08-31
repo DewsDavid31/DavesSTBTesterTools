@@ -1,0 +1,4 @@
+*.config
+*.ps1
+*.ahk
+VCS/*
