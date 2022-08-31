@@ -16,6 +16,7 @@ GOTO :configAgain
 )
 
 for /f "delims=" %%x in ('findstr /v /c:"//" .\CONFIG\%config%') do (set "%%x")
+pause
 set /a "maxDev=numDevices-1"
 if not exist %VCS% mkdir %VCS%
 :Menu
@@ -29,12 +30,14 @@ set w=0
 set v=0
 set watchIndex=0
 echo 1: Fetch a Release/Releases
-echo 2: Set Keyboard Macros/BVT csv scrubbing
-echo 3: Change Config File
-echo 4: Exit
+echo 2: Set Keyboard Macros
+echo 3: CSV scrubbing and BVT reports
+echo 4: Change Config File
+echo 5: Exit
 set /p option= Pick an option:
-if %option% EQU 4 GOTO :Quit
-if %option% EQU 3 GOTO :configAgain
+if %option% EQU 5 GOTO :Quit
+if %option% EQU 4 GOTO :configAgain
+if %option% EQU 3 GOTO :CsvMenu
 if %option% EQU 2 GOTO :MacroMenu
 if %option% EQU 1 GOTO :FetchMenu
 GOTO :Menu
@@ -300,18 +303,23 @@ GOTO :FetchMenu
 :MacroMenu
 echo 1: AutoStream Bot(MUX is discontinued)
 echo 2: CSG Authorization Bot
-echo 3: BVT csv transformer
-echo 4: BVT csv merger and duplicate removal
-echo 5: Show/edit my keyboard macro bindings
-echo 6: Quit
+echo 3: Show/edit my keyboard macro bindings
+echo 4: Quit
 set /p option= Pick a bot option:
-if %option% EQU 6 GOTO :Menu
-if %option% EQU 5 GOTO :Bindings
-if %option% EQU 4 GOTO :Strip
-if %option% EQU 3 GOTO :BVT
+if %option% EQU 4 GOTO :Menu
+if %option% EQU 3 GOTO :Bindings
 if %option% EQU 2 GOTO :Auth
 if %option% EQU 1 GOTO :Auto
 GOTO :MacroMenu
+:CSVMenu
+echo 1: BVT csv transformer(BVTConverter.ps1 REQUIRED)
+echo 2: BVT csv merger and duplicate removal
+echo 3: Quit
+set /p option= Pick a bot option:
+if %option% EQU 3 GOTO :Menu
+if %option% EQU 2 GOTO :Strip
+if %option% EQU 1 GOTO :BVT
+GOTO :CSVMenu
 :Auto
 echo Please open up AutoStream.exe
 pause
@@ -485,9 +493,10 @@ GOTO :MacroMenu
 
 :BVT
 echo WARNING ensure the csv is pure csv and merged already, if in doubt, use merger and duplicate remover first.
-pause
-set /p csvFile=type name of BVT file in %csvIn%: 
-pause
+set /p sure= "Are you sure this csv is merged.csv and correct(y/N)?: "
+if /i %sure% EQU y goto :premerged
+goto :BVT
+:premerged 
 echo converting...
 powershell .\BVTConverter.ps1
 echo also remove any extra header lines, they should stick out from the block of comma values in notepad!
