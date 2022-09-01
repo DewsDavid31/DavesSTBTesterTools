@@ -1,4 +1,4 @@
-END:: 
+~:: 
 send {TAB} 
 send {TAB} 
 send {TAB} 

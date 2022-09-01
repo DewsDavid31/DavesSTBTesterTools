@@ -323,6 +323,7 @@ GOTO :CSVMenu
 :Auto
 echo Please open up AutoStream.exe
 pause
+set w=0
 echo Pick a Branch for mux:
 :SymLoop2
 	if defined branches[%w%] (
