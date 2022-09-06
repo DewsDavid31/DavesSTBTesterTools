@@ -37,6 +37,10 @@ an autohotkey script bound to Insert key that copies an 'expected' string in our
 ## muxAutofill
 an autohotkey script bound to END key that automatically fills in common data for an in-house application, to use you must click the 'stream file name' box first then press END, it will fill all values that don't change and presses 'run'. If you need more info, consult the more IP laden config file or myself directly.
 
+## AutoTestSetter
+an autohotkey script bound to END key that automatically fills in common data for an in-house application for starting a test on setup B, to use you must click the not click anything first then press END when Start Test window is up, it will fill B in the proper slot and automatically start the test.
+
+
 ## Folders:
 ### MACRO
 default location of current AutoHotkey macros constructed
