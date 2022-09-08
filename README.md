@@ -8,11 +8,27 @@ A set of personal manual testing tools designed to make trivial updates and hous
 ## 4. You are good to go!
 
 # How to use:
-Whenever a new release of STB software is up, run TestingCompanion.bat, enter the cube/rack you wish to update by typing its associated config file, or the general installed config file for your method (ex: DISH.config) and it will automatically show you the most recent versions of each STB and download it to your Desktop VCS file. If you want to change where your STB files go, just change 'VCS=.\VCS' to be wherever you want the files to go. They will be installed sorted by Device type and Software Branch name in nested folders.
+## Config Menu:
+![config](https://user-images.githubusercontent.com/33354172/189170191-07f875c2-627c-48bc-b3a6-7882f9b0757b.png)
+This menu is what you see upon starting the testing companion bat file, it will display all .config files in your CONFIG folder included. These files contain all the mappings to your STB software in your repo and are required to make the companion function. Every time you start the application you must type the full name of a config file in CONFIG in order to let your testing companion be usable in multiple products and have business IP in a different spot.
+![config_entry](https://user-images.githubusercontent.com/33354172/189171235-be806174-c88d-443e-b40d-67ba98a53fad.png)
+These files are editable to add new software versions. For demo purposes you get a Demo.config and a test_repo file structure to try out the tool without a workplace repository drive.
 
-Whenever you need a specific release for a single STB box or a whole cube/rack and don't want the slowness of installing from a remote drive, use the "Fetch A Release" menu to look up and download your whole suite of devices(whole cube/rack), a single release for a single box(single) or a release that you know the folder names of but not the name of (exotic). Just select that option and input the needed information and your config file will find the STB software you need. When you are ready to download it to your desktop just enter y or Y in response to 'done with download cart(y/N)?' and all of your so far found software will be downloaded at once to prevent lag or hogging the remote connection from others.
+## Main Menu
+![main_menu](https://user-images.githubusercontent.com/33354172/189171422-8b3d592f-e0ad-4bc1-b644-ac7f0a2297cc.png)
+This Menu has five sub-menus as of this version:
+### 1.Fetch a Release/Releases
+This menu is for grabbing product files from a remote drive onto your harddrive for quicker access or seeing current versions on the drive.
 
-Whenever you need to fill out a form or massage csv data for a form, use the "Macro or CSV" menu. This tool has a selection of hotkey bindings in the form of AutoHotKey Scripts that can automatically pass tests, automatically click quickly, scrubbing capabilities for certain csv's for specific forms and more. For more info on their usage see the below information on the readme on what each one does.
+### 2.Set Keyboard Macros
+This menu is for setting, editing and generating AutoHotKey scripts for your keyboard.
+
+### 3.CSV scrubbing and BVT reports
+The menu for scrubbing CSV files for reports, this feature is largely DISH specific and thus I can't say much or show much without specific config files or powershell helper scripts. The tool will guide you if it is used with the proper configs and files.
+### 4.Change Config File
+The menu you use to change the products you want to work with or possibly change to a different rack of products, I suggest making a config file off of your company template or Template.config for each rack you have.
+### 5.Exit
+As the name implies, you just quit the program, the testing companion is made to be kept open all day and swap config files for testing workdays but sometimes you need to exit the tool.
 
 # The Tools:
 ## TestingCompanion
