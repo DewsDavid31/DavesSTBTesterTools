@@ -21,7 +21,37 @@ These files are editable to add new software versions. For demo purposes you get
 
 This Menu has five sub-menus as of this version:
 ### 1.Fetch a Release/Releases
+![fetch_menu](https://user-images.githubusercontent.com/33354172/189176070-6dce5804-1239-431e-922d-92a2ff742ff5.png)
+
 This menu is for grabbing product files from a remote drive onto your harddrive for quicker access or seeing current versions on the drive.
+#### 1.Fetch Release for a Whole Cube/Rack
+![fetch_whole_cube](https://user-images.githubusercontent.com/33354172/189177094-b6e672e4-68a9-4f33-8c82-eb2156f8844e.png)
+
+This selection prompts a version you wish to fetch for every device that you have in your config file.
+
+#### 2.Fetch a Single Release
+![fetch_single_prompt](https://user-images.githubusercontent.com/33354172/189177070-97cf7902-8e48-4932-b297-d07ec4fc33e4.png)
+
+This selection will prompt what version of software you want for a single STB in your config file.
+
+#### 3.Fetch an Exotic Release(...)
+![fetch_exotic_prompt](https://user-images.githubusercontent.com/33354172/189177197-fffd0bc1-3591-435c-a520-190749b8062c.png)
+
+This selection will fetch a specific non-human readable software codename or whatever the folder is named without questions asked.
+
+#### 4.Show me every current release version
+![show_me_function](https://user-images.githubusercontent.com/33354172/189177132-69a004bf-47cd-4db0-93f7-583e7c8c5067.png)
+
+This Selection searches the repository for the newest files in each software mapping in your config file and displays them, this is helpful for seeing what the new production software might be.
+
+#### 5.Fetch Updates
+Automatically checks each directory in config mappings for each software release and tries to copy the newest file, and if it already exists just says "0 files copied" and doesn't copy anything.
+
+#### 6.put a watch program up to notify me ...
+Creates another batch file from itself that checks the conifgured repository for a checksum file in a mapping you provided to see if the software is ready to fetch. Your mileage may vary if you don't have these checksums at your workplace.
+
+#### 7.Exit
+Returns to Main Menu.
 
 ### 2.Set Keyboard Macros
 ![macro_menu](https://user-images.githubusercontent.com/33354172/189173969-2e817bbf-afeb-49c3-a670-9ae073861076.png)
