@@ -28,16 +28,33 @@ This menu is for grabbing product files from a remote drive onto your harddrive 
 ![fetch_whole_cube](https://user-images.githubusercontent.com/33354172/189177094-b6e672e4-68a9-4f33-8c82-eb2156f8844e.png)
 
 This selection prompts a version you wish to fetch for every device that you have in your config file.
+![fetch_whole_cube_prompt](https://user-images.githubusercontent.com/33354172/189182225-88630762-1175-4ace-ab02-064fc4c8d88e.png)
+![fetch_whole_cube_results](https://user-images.githubusercontent.com/33354172/189182390-3cbc66cf-f34f-4285-a515-3eabc6c4ca94.png)
+
+Simply enter the family in your config selection and then a specific version. Here we selected branch_1 version a1
 
 #### 2.Fetch a Single Release
 ![fetch_single_prompt](https://user-images.githubusercontent.com/33354172/189177070-97cf7902-8e48-4932-b297-d07ec4fc33e4.png)
 
 This selection will prompt what version of software you want for a single STB in your config file.
+![fetch_single_prompt_2](https://user-images.githubusercontent.com/33354172/189184488-7ffb0eef-5a01-4046-8f74-aadecfa35776.png)
+
+Then it shows all versions in that family and asks you to manually type one.
+
+![fetch_single_results](https://user-images.githubusercontent.com/33354172/189184499-a734b70a-c24f-477e-81df-fc8ac132a242.png)
+
+It then copies that version to your DOWNLOAD CART, an array of copies to be done that you can say to do or keep adding versions and do it later.
+
+#### What is the DOWNLOAD CART?
+An array of current downloads/copies you have selected so far to be done all at once to not clog the Virtual/Physical Drive of the repo for everyone, also saves time.
 
 #### 3.Fetch an Exotic Release(...)
 ![fetch_exotic_prompt](https://user-images.githubusercontent.com/33354172/189177197-fffd0bc1-3591-435c-a520-190749b8062c.png)
 
 This selection will fetch a specific non-human readable software codename or whatever the folder is named without questions asked.
+![fetch_exotic_prompt_and_results](https://user-images.githubusercontent.com/33354172/189182495-85135c67-eea9-4a57-b739-39c3bb715ccb.png)
+
+Here we chose software in abxx/abb1.
 
 #### 4.Show me every current release version
 ![show_me_function](https://user-images.githubusercontent.com/33354172/189177132-69a004bf-47cd-4db0-93f7-583e7c8c5067.png)
@@ -45,10 +62,16 @@ This selection will fetch a specific non-human readable software codename or wha
 This Selection searches the repository for the newest files in each software mapping in your config file and displays them, this is helpful for seeing what the new production software might be.
 
 #### 5.Fetch Updates
+![fetch_updates](https://user-images.githubusercontent.com/33354172/189182877-3224af53-e396-4e22-a5a2-916812a025a1.png)
+
+
 Automatically checks each directory in config mappings for each software release and tries to copy the newest file, and if it already exists just says "0 files copied" and doesn't copy anything.
 
 #### 6.put a watch program up to notify me ...
-Creates another batch file from itself that checks the conifgured repository for a checksum file in a mapping you provided to see if the software is ready to fetch. Your mileage may vary if you don't have these checksums at your workplace.
+![watch](https://user-images.githubusercontent.com/33354172/189183344-39cb8f99-e350-498b-a15a-9bb6a29de90a.png)
+
+
+Creates another batch file from itself that checks the conifgured repository for a checksum file in a mapping you provided to see if the software is ready to fetch. Your mileage may vary if you don't have these checksums at your workplace. Supports making multiple, will be saved in MACRO file.
 
 #### 7.Exit
 Returns to Main Menu.
@@ -67,13 +90,35 @@ Specific Autohotkey for an in-house utility, only compatible with dish configs, 
 ![macro_edit_show](https://user-images.githubusercontent.com/33354172/189174960-9e2a6d8e-d540-418e-848a-d79e1ef48e9d.png)
 
 This menu shows and edits all your current AutoHotKey macro files in MACRO, you can change the folder searched in your config file.
+#### 1. Delete this mapping
+
+Unpairs a key binding by changing selected AHK file's key to unused HELP key.
+
+#### 2. Map to a new key
+![macro_mapping](https://user-images.githubusercontent.com/33354172/189184283-ad1ce702-9e38-4e87-b0ce-992dbb0a8710.png)
+
+
+Shows a selection of possible text representations of AHK keys that are not in the way of testing. Simply type one and the companion will directly replace the key in the AHK file with that one, then runs it for you.
+
+#### 1. Start this key binding
+Directly runs the AHK file for that keybind. The companion can't know if it is running or not.
+
+#### 1. Exit
+Returns to Macro Menu.
+
+
+
 ### 4. Quit
 Exits to Main Menu.
 
 ### 3.CSV scrubbing and BVT reports
+![csv_menu](https://user-images.githubusercontent.com/33354172/189183598-0845e6dd-7dd8-42ca-a838-41dcccea382b.png)
+
 The menu for scrubbing CSV files for reports, this feature is largely DISH specific and thus I can't say much or show much without specific config files or powershell helper scripts. The tool will guide you if it is used with the proper configs and files.
+
 ### 4.Change Config File
-The menu you use to change the products you want to work with or possibly change to a different rack of products, I suggest making a config file off of your company template or Template.config for each rack you have.
+The menu you use to change the products you want to work with or possibly change to a different rack of products, I suggest making a config file off of your company template or Template.config for each rack you have. Essentially takes you to the Config Menu from earlier.
+
 ### 5.Exit
 As the name implies, you just quit the program, the testing companion is made to be kept open all day and swap config files for testing workdays but sometimes you need to exit the tool.
 
