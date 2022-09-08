@@ -21,7 +21,19 @@ This Menu has five sub-menus as of this version:
 This menu is for grabbing product files from a remote drive onto your harddrive for quicker access or seeing current versions on the drive.
 
 ### 2.Set Keyboard Macros
+![macro_menu](https://user-images.githubusercontent.com/33354172/189173969-2e817bbf-afeb-49c3-a670-9ae073861076.png)
 This menu is for setting, editing and generating AutoHotKey scripts for your keyboard.
+### 1.AutoStream Bot
+Specific Autohotkey for an in-house utility, only compatible with dish configs, no more information on it without IP.
+
+### 2.CSG Authorization bot
+Specific Autohotkey for an in-house utility, only compatible with dish configs, no more information on it without IP.
+
+### 3. Show/Edit my keyboard mappings
+![macro_edit_show](https://user-images.githubusercontent.com/33354172/189174960-9e2a6d8e-d540-418e-848a-d79e1ef48e9d.png)
+This menu shows and edits all your current AutoHotKey macro files in MACRO, you can change the folder searched in your config file.
+### 4. Quit
+Exits to Main Menu.
 
 ### 3.CSV scrubbing and BVT reports
 The menu for scrubbing CSV files for reports, this feature is largely DISH specific and thus I can't say much or show much without specific config files or powershell helper scripts. The tool will guide you if it is used with the proper configs and files.
