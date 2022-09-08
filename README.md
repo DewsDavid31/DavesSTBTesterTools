@@ -10,18 +10,22 @@ A set of personal manual testing tools designed to make trivial updates and hous
 # How to use:
 ## Config Menu:
 ![config](https://user-images.githubusercontent.com/33354172/189170191-07f875c2-627c-48bc-b3a6-7882f9b0757b.png)
+
 This menu is what you see upon starting the testing companion bat file, it will display all .config files in your CONFIG folder included. These files contain all the mappings to your STB software in your repo and are required to make the companion function. Every time you start the application you must type the full name of a config file in CONFIG in order to let your testing companion be usable in multiple products and have business IP in a different spot.
 ![config_entry](https://user-images.githubusercontent.com/33354172/189171235-be806174-c88d-443e-b40d-67ba98a53fad.png)
+
 These files are editable to add new software versions. For demo purposes you get a Demo.config and a test_repo file structure to try out the tool without a workplace repository drive.
 
 ## Main Menu
 ![main_menu](https://user-images.githubusercontent.com/33354172/189171422-8b3d592f-e0ad-4bc1-b644-ac7f0a2297cc.png)
+
 This Menu has five sub-menus as of this version:
 ### 1.Fetch a Release/Releases
 This menu is for grabbing product files from a remote drive onto your harddrive for quicker access or seeing current versions on the drive.
 
 ### 2.Set Keyboard Macros
 ![macro_menu](https://user-images.githubusercontent.com/33354172/189173969-2e817bbf-afeb-49c3-a670-9ae073861076.png)
+
 This menu is for setting, editing and generating AutoHotKey scripts for your keyboard.
 ### 1.AutoStream Bot
 Specific Autohotkey for an in-house utility, only compatible with dish configs, no more information on it without IP.
@@ -31,6 +35,7 @@ Specific Autohotkey for an in-house utility, only compatible with dish configs, 
 
 ### 3. Show/Edit my keyboard mappings
 ![macro_edit_show](https://user-images.githubusercontent.com/33354172/189174960-9e2a6d8e-d540-418e-848a-d79e1ef48e9d.png)
+
 This menu shows and edits all your current AutoHotKey macro files in MACRO, you can change the folder searched in your config file.
 ### 4. Quit
 Exits to Main Menu.
