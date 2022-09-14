@@ -52,6 +52,7 @@ An array of current downloads/copies you have selected so far to be done all at 
 ![fetch_exotic_prompt](https://user-images.githubusercontent.com/33354172/189177197-fffd0bc1-3591-435c-a520-190749b8062c.png)
 
 This selection will fetch a specific non-human readable software codename or whatever the folder is named without questions asked.
+
 ![fetch_exotic_prompt_and_results](https://user-images.githubusercontent.com/33354172/189182495-85135c67-eea9-4a57-b739-39c3bb715ccb.png)
 
 Here we chose software in abxx/abb1.
@@ -67,7 +68,7 @@ This Selection searches the repository for the newest files in each software map
 
 Automatically checks each directory in config mappings for each software release and tries to copy the newest file, and if it already exists just says "0 files copied" and doesn't copy anything.
 
-#### 6.put a watch program up to notify me ...
+#### 6.put a watch program up to notify me(WARNING ISSUE #5 MAKES THIS NO LONGER WORK) ...
 ![watch](https://user-images.githubusercontent.com/33354172/189183344-39cb8f99-e350-498b-a15a-9bb6a29de90a.png)
 
 
