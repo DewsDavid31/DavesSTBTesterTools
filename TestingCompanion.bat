@@ -89,14 +89,16 @@ echo ^set failed=ff>> %Bots%\watch!watchIndex!.bat
 echo timeout /t 60 >> %Bots%\watch!watchIndex!.bat
  :SymLoop41
 if defined roots[%z%] (
+        call echo ^echo checking device %%devices[%z%]%% ... >>  %Bots%\watch!watchIndex!.bat
 	call set root=%%roots[%z%]%%%%mappings[%index%]%%%ending%\%%mappings[%index%]%%
 	call set next=!root!%vers%
         echo ^set snapexist=t>> %Bots%\watch!watchIndex!.bat
         echo ^set nonsnap=t>> %Bots%\watch!watchIndex!.bat
-        echo if not exist !next!\USB\md5bin.txt ^set nonsnap=f>> %Bots%\watch!watchIndex!.bat
+        echo if not exist !next!\build_profile.fin ^set nonsnap=f>> %Bots%\watch!watchIndex!.bat
         echo if not exist !next!\md5.txt ^set snapexist=f>> %Bots%\watch!watchIndex!.bat
         echo ^set oredexist=%%nonsnap%%%%snapexist%%>> %Bots%\watch!watchIndex!.bat
         echo if %%oredexist%%==%%failed%% goto oneleft>> %Bots%\watch!watchIndex!.bat
+        call echo ^echo device %%devices[%z%]%% is ready >>  %Bots%\watch!watchIndex!.bat
 	set /a "z+=1"
 	set /a "index+=1"    
         GOTO :SymLoop41
