@@ -68,11 +68,11 @@ This Selection searches the repository for the newest files in each software map
 
 Automatically checks each directory in config mappings for each software release and tries to copy the newest file, and if it already exists just says "0 files copied" and doesn't copy anything.
 
-#### 6.put a watch program up to notify me(WARNING ISSUE #5 MAKES THIS NO LONGER WORK) ...
+#### 6.put a watch program up to notify me...
 ![watch](https://user-images.githubusercontent.com/33354172/189183344-39cb8f99-e350-498b-a15a-9bb6a29de90a.png)
 
 
-Creates another batch file from itself that checks the conifgured repository for a checksum file in a mapping you provided to see if the software is ready to fetch. Your mileage may vary if you don't have these checksums at your workplace. Supports making multiple, will be saved in MACRO file.
+Creates another batch file from itself that checks the conifgured repository for a build file in a mapping you provided to see if the software is ready to fetch. Your mileage may vary if you don't have these build files at your workplace. Supports making multiple, will be saved in MACRO file.
 
 #### 7.Exit
 Returns to Main Menu.
