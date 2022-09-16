@@ -526,6 +526,15 @@ powershell -Command "Import-Csv %csvIn%merged.csv -Delimiter ',' -Header "time",
 powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape(';'),[regex]::Escape(',') | Set-Content %csvIn%merged.csv"
 powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('@{'),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
 powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('}'),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('time='),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('unused='),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('deviceName='),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('unused2='),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('scenarioName='),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('unused3='),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+powershell -Command "(Get-Content %csvIn%merged.csv -Raw) -Replace [regex]::Escape('status='),[regex]::Escape('') | Set-Content %csvIn%merged.csv"
+echo WARNING remove First line of merged.csv if a line already says "Time,..." etc. below the first line.
+pause
 echo done!
 pause
 GOTO :CSVMenu
@@ -599,3 +608,4 @@ echo macro on %targetBind% key active!
 GOTO :Bindings
 :Quit
 exit
+
