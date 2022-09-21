@@ -320,6 +320,12 @@ if %option% EQU 3 GOTO :Menu
 if %option% EQU 2 GOTO :Strip
 if %option% EQU 1 GOTO :BVT
 GOTO :CSVMenu
+:SearchWebApp
+
+
+
+
+GOTO :doneSearchWebApp
 :Auto
 echo Please open up AutoStream.exe
 pause
@@ -333,6 +339,11 @@ echo Pick a Branch for mux:
 	)
 call set /p branch_id= Selection:
 call set branch=%%branches[%branch_id%]%%
+call set web=%%webmappings[%branch_id%]%%
+call set webcode=%%codemappings[%branch_id%]%%
+pause
+FOR /F "delims=" %%q IN ('dir "%webroot%\%web%*" /b /t:w /od') DO SET /A r=r+1
+if %r% LEQ 9 set twodig=0%r%
 set /A index1= %numDevices% * %branch_id% + 4
 set /A index2= %numDevices% * %branch_id% + 0
 set /A index3= %numDevices% * %branch_id% + 3
@@ -415,6 +426,7 @@ echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send {SPACE} >> %Bots%AutoStreamBot.ahk
 echo send {TAB} >> %Bots%AutoStreamBot.ahk
+echo send %webcode%%twodig% >> %Bots%AutoStreamBot.ahk
 echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send {ENTER} >> %Bots%AutoStreamBot.ahk
