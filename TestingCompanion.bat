@@ -28,6 +28,7 @@ set q=0
 set x=0
 set w=0
 set v=0
+set r=0
 set watchIndex=0
 echo 1: Fetch a Release/Releases
 echo 2: Set Keyboard Macros
@@ -49,6 +50,7 @@ set q=0
 set x=0
 set w=0
 set v=0
+set r=0
 echo 1: Fetch Release for a Whole Cube/Rack
 echo 2: Fetch a Single Release
 echo 3: Fetch an Exotic Release(no known intent, but known software name) 
@@ -301,6 +303,7 @@ xcopy /s/e/i/d/Y %source% %target%
 GOTO :Done
 GOTO :FetchMenu
 :MacroMenu
+set r=0
 echo 1: AutoStream Bot(MUX is discontinued)
 echo 2: CSG Authorization Bot
 echo 3: Show/edit my keyboard macro bindings
@@ -422,11 +425,11 @@ echo send {SPACE} >> %Bots%AutoStreamBot.ahk
 echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send %snap% >> %Bots%AutoStreamBot.ahk
 echo send {TAB} >> %Bots%AutoStreamBot.ahk
-echo send {TAB} >> %Bots%AutoStreamBot.ahk
-echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send {SPACE} >> %Bots%AutoStreamBot.ahk
 echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send %webcode%%twodig% >> %Bots%AutoStreamBot.ahk
+echo send {TAB} >> %Bots%AutoStreamBot.ahk
+echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send {TAB} >> %Bots%AutoStreamBot.ahk
 echo send {ENTER} >> %Bots%AutoStreamBot.ahk
