@@ -83,7 +83,8 @@ echo Pick a Branch for to watch for updates:
 setlocal ENABLEDELAYEDEXPANSION
 set /p watchedBranch= Selected branch:
 set /p vers= type a version(example A1):
-call set branchName= %%branches[!watchedBranch!]%%
+call set branchName= %%branches[%watchedBranch%]%%
+set /a "index+=%numDevices%*%watchedBranch%"
 echo ^@echo off > %Bots%\watch!watchIndex!.bat
 echo ^:oneleft >> %Bots%\watch!watchIndex!.bat
 echo ^echo waiting to recheck %branchName% %vers%... >> %Bots%watch!watchIndex!.bat
