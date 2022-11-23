@@ -1,0 +1,1 @@
+{"repo_pattern":"./test_repo/@stb_name@/@software_name[2]@xx/@software_name@/", "repo_variables": ["@stb_name@", "@software_name@", "@software_name_2digit@"], "macro_path":"./MACRO", "local_path":"./VCS"}
