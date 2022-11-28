@@ -20,6 +20,25 @@ class MacroHandler:
     def __init__(self):
         self.pattern_handler = PatternHandler()
 
+    def find_vars(self, string):
+        found = []
+        found_text = "@"
+        in_var = False
+        for charac in string:
+            if in_var:
+                found_text += charac
+            if charac == "@":
+                if in_var:
+                    if found_text not in found:
+                        found.append(found_text)
+                    found_text = "@"
+                in_var = not in_var
+        return found
+                    
+
+                    
+
+                
     def read_macro(self, macro_path):
         macro_file = open(macro_path)
         macro_lines = macro_file.readlines()
@@ -32,7 +51,9 @@ class MacroHandler:
             elif args[0] == HOTKEY and len(args) >= 2:
                 pyautogui.hotkey(args[1:])
             elif args[0] == KEYBOARD and len(args) >= 2:
-                pyautogui.write(args[1:])
+                partial = args[1:]
+                for writing in partial:
+                    pyautogui.write(writing + " ")
             elif args[0] == CLICK:
                 if len(args) == 1:
                     pyautogui.click()
@@ -42,6 +63,39 @@ class MacroHandler:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
                 print("Expecting: <"+ PRESS + "/" + KEYBOARD + "/" + HOTKEY + "/" + CLICK + "/" + ">\t<Key/Text/coordinate>\t<key/coordinate>...")
+
+    def read_macro_pattern(self, macro_path):
+        macro_file = open(macro_path)
+        macro_lines = macro_file.readlines()
+        pattern = self.find_vars(str(macro_lines))
+        values = []
+        for item in pattern:
+            values.append(input("Insert value for variable " + item + ": "))
+        value_filled_macro = []
+        for line in macro_lines:
+            value_filled_macro.append(self.pattern_handler.pattern(line ,pattern, values))
+        line_num = 0
+        for line in value_filled_macro:
+            line_num+=1
+            args = line.split()
+            if args[0] == PRESS and len(args) >= 2:
+                pyautogui.press(args[1])
+            elif args[0] == HOTKEY and len(args) >= 2:
+                pyautogui.hotkey(args[1:])
+            elif args[0] == KEYBOARD and len(args) >= 2:
+                partial = args[1:]
+                for writing in partial:
+                    pyautogui.write(writing + " ")
+            elif args[0] == CLICK:
+                if len(args) == 1:
+                    pyautogui.click()
+                elif len(args == 3):
+                    pyautogui.click(args[1],args[2])
+            else:
+                print("Invalid syntax at line " + str(line_num) + "")
+                print("Actual: " + line)
+                print("Expecting: <"+ PRESS + "/" + KEYBOARD + "/" + HOTKEY + "/" + CLICK + "/" + ">\t<Key/Text/coordinate>\t<key/coordinate>...")
+
 
     def create_macro(self, macro_path):
         macro_text = ""
@@ -79,7 +133,7 @@ class MacroHandler:
                 case 5:
                     fully_done = True
         print("Writing new macro to " + macro_path + "...")
-        new_macro = open(macro_path + '.txt', 'w+')
+        new_macro = open(macro_path + '.macro', 'w+')
         new_macro.write(macro_text)
         new_macro.close()
         print("Macro created! To run, simply use read_macro function on this file")
@@ -137,15 +191,15 @@ class TestingCompanion:
 
     def main_menu(self):
         print('Welcome to DavesSTBTesterTools Version 2.0!')
-        command = input('1. Run a Macro File\n2. Create a Macro File\n3. Fetch STB from repo\n4. Exit\nEnter a number from above: ')
+        command = input('1. Run a Macro File\n2. Create a Macro File\n3. Fetch STB from repo\n4. Run a macro with variables\n5. Exit\nEnter a number from above: ')
         if not str.isdigit(command) or int(command) > 5 or int(command) < 1:
                 print("Invalid number, retry...")
                 self.main_menu() 
         match int(command):
             case 1:
                 print('Current Macros:')
-                os.listdir(self.macro_path)
-                chosen_macro = input('Enter name of macro above to run: ')
+                print(os.listdir(self.macro_path))
+                chosen_macro = input('Enter macro above to run: ')
                 self.macro_handler.read_macro(os.path.join(self.macro_path,chosen_macro))
                 self.main_menu()
             case 2:
@@ -159,6 +213,11 @@ class TestingCompanion:
                 self.repo.fetch(in_variables)
                 self.main_menu()
             case 4:
+                print('Current Macros:')
+                print(os.listdir(self.macro_path))
+                chosen_macro = input('Enter macro above to run: ')
+                self.macro_handler.read_macro_pattern(os.path.join(self.macro_path, chosen_macro))
+            case 5:
                 return
 
 def main():
