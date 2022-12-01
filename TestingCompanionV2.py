@@ -6,6 +6,8 @@ PRESS = "press"
 KEYBOARD = "keyboard"
 CLICK = "click"
 HOTKEY = "hotkey"
+SUBPROCESS = "subprocess"
+SHELL = "shell"
 
 
 class PatternHandler:
@@ -59,6 +61,11 @@ class MacroHandler:
                     pyautogui.click()
                 elif len(args == 3):
                     pyautogui.click(args[1],args[2])
+            elif args[0] == SUBPROCESS:
+                process = subprocess.Popen([str(args[1:]).strip().replace('[','').replace(']','')], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                print(process.stdout.readlines())
+            elif args[0] == SHELL:
+                process = subprocess.run([str(args[1:]).strip().replace('[','').replace(']','')])
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
@@ -91,6 +98,11 @@ class MacroHandler:
                     pyautogui.click()
                 elif len(args == 3):
                     pyautogui.click(args[1],args[2])
+            elif args[0] == SUBPROCESS:
+                process = subprocess.run([str(args[1:]).strip().replace('[','').replace(']','')], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                print(process.stdout.readlines())
+            elif args[0] == SHELL:
+                process = subprocess.run([str(args[1:]).strip().replace('[','').replace(']','')])
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
@@ -102,7 +114,7 @@ class MacroHandler:
         fully_done = False
         while(not fully_done):
             command = input("Enter index for type of keypress\n1. press of a key\n2. keyboard text input\n3. mouse click\n4.key combos\n5. DONE making macro\nEnter a number from above: ")
-            if not str.isdigit(command) or int(command) > 5 or int(command) < 1:
+            if not str.isdigit(command) or int(command) > 6 or int(command) < 1:
                 print("Invalid number, retry...")
                 self.create_macro(macro_path)
             match int(command):
@@ -131,6 +143,26 @@ class MacroHandler:
                         else:
                             done = True
                 case 5:
+                    macro_text += SUBPROCESS
+                    done = False
+                    first_command = input("Enter the software to be passed args")
+                    macro_text += "\t" + first_command
+                    while(not done):
+                        if command != "DONE":
+                            command = input("Enter commands to pass or DONE to finish: ")
+                            macro_text += "\t" + command + "\n"
+                        else:
+                            done = True
+                    fully_done = True
+                case 6:
+                    macro_text += SHELL
+                    done = False
+                    while(not done):
+                        if command != "DONE":
+                            command = input("Enter commands to run in terminal or DONE to finish: ")
+                            macro_text += "\t" + command + "\n"
+                        else:
+                            done = True
                     fully_done = True
         print("Writing new macro to " + macro_path + "...")
         new_macro = open(macro_path + '.macro', 'w+')
@@ -163,8 +195,16 @@ class ConfigLoader:
             config_json = json.load(config_file)
             self.repo_pattern = config_json['repo_pattern']
             self.repo_variables = config_json['repo_variables']
-            self.local_path = config_json['local_path']
-            self.macro_path = config_json['macro_path']
+            if os.name == 'nt':
+                self.local_path = config_json['local_path_nt']
+                self.macro_path = config_json['macro_path_nt']
+            elif os.name == 'posix':
+                self.local_path = config_json['local_path_posix']
+                self.macro_path = config_json['macro_path_posix']
+            else:
+                self.local_path = 'none'
+                self.macro_path = 'none'
+                print(os.name + ' is not a supported os in config files')
         except:
             print("Config file at" + config_path + " doesn't exist")
 
@@ -183,7 +223,8 @@ class TestingCompanion:
                 return
         if not os.path.exists(self.local_path):
             if os.name == 'posix' or os.name == 'nt':
-                subprocess.call(['mkdir', self.local_path])
+                print(self.local_path)
+                subprocess.call(['mkdir',self.config_loader.local_path])
             else:
                 print("Unable to create missing Macro directory, " + os.name + " OS unsupported")
                 return
@@ -221,9 +262,9 @@ class TestingCompanion:
                 return
 
 def main():
-    test_companion = TestingCompanion("./CONFIG/v2config.json")
+    test_companion = TestingCompanion(os.path.join(".","CONFIG","v2config.json"))
     test_companion.main_menu()
-
+    
 if __name__ == "__main__":
     main()
 
