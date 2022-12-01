@@ -1,0 +1,14 @@
+shell adb disconnect
+shell adb connect @ip1@
+subprocess vts-tradefed run vts -m "VtsKernelProcFileApi" @ip1@
+shell adb disconnect
+shell adb connect @ip1@
+shell adb disconnect
+shell adb connect @ip1@
+shell adb disconnect
+shell adb connect @ip1@
+shell adb disconnect
+shell adb connect @ip1@
+shell adb disconnect
+shell adb connect @ip1@
+

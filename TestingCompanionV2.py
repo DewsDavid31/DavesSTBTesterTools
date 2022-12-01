@@ -117,23 +117,22 @@ class MacroHandler:
             if not str.isdigit(command) or int(command) > 6 or int(command) < 1:
                 print("Invalid number, retry...")
                 self.create_macro(macro_path)
-            match int(command):
-                case 1:
+                if command == "1":
                     macro_text += PRESS
                     command = input("Enter key name to press: ")
                     macro_text += "\t" + command + "\n"
-                case 2:
+                elif command ==  "2":
                     macro_text += KEYBOARD
                     command = input("Enter text to send to keyboard: ")
                     macro_text += "\t" + command + "\n"
-                case 3:
+                elif command == "3":
                     macro_text += CLICK
                     command = input("Enter x pixels for location of click or none for current location: ")
                     if command != "none":
                         macro_text += "\t" + command
                         command = input("Enter y pixels for location of click: ")
                         macro_text += "\t" + command + "\n"
-                case 4:
+                elif command == "4":
                     macro_text += HOTKEY
                     done = False
                     while(not done):
@@ -142,7 +141,7 @@ class MacroHandler:
                             macro_text += "\t" + command + "\n"
                         else:
                             done = True
-                case 5:
+                elif command == "5":
                     macro_text += SUBPROCESS
                     done = False
                     first_command = input("Enter the software to be passed args")
@@ -154,7 +153,7 @@ class MacroHandler:
                         else:
                             done = True
                     fully_done = True
-                case 6:
+                elif command == "6":
                     macro_text += SHELL
                     done = False
                     while(not done):
