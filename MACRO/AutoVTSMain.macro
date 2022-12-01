@@ -1,1 +1,3 @@
-subprocess vts-tradefed run vts --exclude-filter "VtsFastbootVerification" --exclude-filter "VtsKernelLtp" --exclude-filter "VtsKernelProcFileApi" --shard-count 2 -s @ip1@ -s @ip2@ --retry-strategy RETRY_ANY_FAILURE --max-testcase-run-count 2
+shell adb connect @ip1@
+shell adb connect @ip2@
+subprocess vts-tradefed run vts --exclude-filter VtsFastbootVerification --shard-count 2 -s @ip1@ -s @ip2@ --retry-strategy RETRY_ANY_FAILURE --max-testcase-run-count 2

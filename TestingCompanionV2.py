@@ -62,10 +62,12 @@ class MacroHandler:
                 elif len(args == 3):
                     pyautogui.click(args[1],args[2])
             elif args[0] == SUBPROCESS:
-                process = subprocess.Popen([str(args[1:]).strip().replace('[','').replace(']','')], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-                print(process.stdout.readlines())
+                stripped = " ".join(args[1:])
+                process = subprocess.call([stripped],shell=True)
+                for line in process.stdout.readlines():
+                    print(line[2:-1])
             elif args[0] == SHELL:
-                process = subprocess.run([str(args[1:]).strip().replace('[','').replace(']','')])
+                subprocess.run(args[1:])
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
@@ -99,10 +101,12 @@ class MacroHandler:
                 elif len(args == 3):
                     pyautogui.click(args[1],args[2])
             elif args[0] == SUBPROCESS:
-                process = subprocess.run([str(args[1:]).strip().replace('[','').replace(']','')], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-                print(process.stdout.readlines())
+                stripped = " ".join(args[1:])
+                process = subprocess.call([stripped],shell=True)
+                for line in process.stdout.readlines():
+                    print(line[2:-1])
             elif args[0] == SHELL:
-                process = subprocess.run([str(args[1:]).strip().replace('[','').replace(']','')])
+                subprocess.run(args[1:])
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
