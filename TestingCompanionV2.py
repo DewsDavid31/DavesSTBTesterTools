@@ -233,32 +233,34 @@ class TestingCompanion:
         print('Welcome to DavesSTBTesterTools Version 2.0!')
         command = input('1. Run a Macro File\n2. Create a Macro File\n3. Fetch STB from repo\n4. Run a macro with variables\n5. Exit\nEnter a number from above: ')
         if not str.isdigit(command) or int(command) > 5 or int(command) < 1:
-                print("Invalid number, retry...")
-                self.main_menu() 
-        match int(command):
-            case 1:
-                print('Current Macros:')
-                print(os.listdir(self.macro_path))
-                chosen_macro = input('Enter macro above to run: ')
-                self.macro_handler.read_macro(os.path.join(self.macro_path,chosen_macro))
-                self.main_menu()
-            case 2:
-                macro_name = input('Enter name of new macro: ')
-                self.macro_handler.create_macro(os.path.join(self.macro_path, macro_name))
-                self.main_menu()
-            case 3:
-                in_variables = []
-                for prompt_item in self.repo.repo_variables:
-                    in_variables.append(input('Enter ' + prompt_item + " of pattern: "))
-                self.repo.fetch(in_variables)
-                self.main_menu()
-            case 4:
-                print('Current Macros:')
-                print(os.listdir(self.macro_path))
-                chosen_macro = input('Enter macro above to run: ')
-                self.macro_handler.read_macro_pattern(os.path.join(self.macro_path, chosen_macro))
-            case 5:
-                return
+            print("Invalid number, retry...")
+            self.main_menu() 
+        elif command == "1":
+            print('Current Macros:')
+            print(os.listdir(self.macro_path))
+            chosen_macro = input('Enter macro above to run: ')
+            self.macro_handler.read_macro(os.path.join(self.macro_path,chosen_macro))
+            self.main_menu()
+        elif command == "2":
+            macro_name = input('Enter name of new macro: ')
+            self.macro_handler.create_macro(os.path.join(self.macro_path, macro_name))
+            self.main_menu()
+        elif command == "3":
+            in_variables = []
+            for prompt_item in self.repo.repo_variables:
+                in_variables.append(input('Enter ' + prompt_item + " of pattern: "))
+            self.repo.fetch(in_variables)
+            self.main_menu()
+        elif command == "4":
+            print('Current Macros:')
+            print(os.listdir(self.macro_path))
+            chosen_macro = input('Enter macro above to run: ')
+            self.macro_handler.read_macro_pattern(os.path.join(self.macro_path, chosen_macro))
+        elif command == "5":
+            return
+        else:
+            print("invalid selection, try again")
+            self.main_menu()
 
 def main():
     test_companion = TestingCompanion(os.path.join(".","CONFIG","v2config.json"))
