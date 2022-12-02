@@ -1,0 +1,1 @@
+remotesubprocess @host@ @username@ @password@ vts-tradefed l r

@@ -2,13 +2,42 @@ import subprocess
 import os
 import pyautogui
 import json
+import paramiko as pm
 PRESS = "press"
 KEYBOARD = "keyboard"
 CLICK = "click"
 HOTKEY = "hotkey"
 SUBPROCESS = "subprocess"
 SHELL = "shell"
-
+REMOTE = "remote"
+REMOTE_SUBPROCESS = "remotesubprocess"
+# syntax for macros:
+# each of these formats is accepted as a line in a .macro file loaded by this application, nothing more
+# each is read and computed line-by-line
+#
+# press <keyname>
+# presses that key at current location
+#
+# keyboard <text>
+# sends keyboard strokes at current location of text given
+#
+# click <xpixels> <ypixels>
+# clicks at current location is no args are given or location in pixels x,y
+#
+# hotkey <keyname> <keyname>...
+# holds each key by its given name at the same time
+#
+# subprocess <application> <terminal command>...
+# does terminal command for application and pipes arguments into its i/o stream used on tradefed
+#
+# shell <terminal command> <terminal command>...
+# directly runs posix commands given after shell
+#
+# remote <ip> <username> <password> <terminal command>....
+# ssh into ip with username and password, then runs terminal commands given
+#
+# remotesubprocess <ip> <username> <password> <application> <terminal command>....
+# ssh into ip with username and password, then runs terminal command, then sends terminal commands into its i/o stream, used on tradefed
 
 class PatternHandler:
     def pattern(self, pattern_string, variables, args):
@@ -68,6 +97,30 @@ class MacroHandler:
                     print(line[2:-1])
             elif args[0] == SHELL:
                 subprocess.run(args[1:])
+            elif args[0] == REMOTE:
+                host = args[1].strip()
+                user = args[2].strip()
+                passd = args[3].strip()
+                client = pm.SSHClient()
+                client.set_missing_host_key_policy(pm.AutoAddPolicy())
+                client.connect(host, username=user, password=passd)
+                stdin, stdout, stderr = client.exec_command(args[4:], get_pty=True)
+                for line in iter(stdout.readline, ""):
+                    print(host + ": "+ line)
+                client.close()
+            elif args[0] == REMOTE_SUBPROCESS:
+                host = args[1].strip()
+                user = args[2].strip()
+                passd = args[3].strip()
+                app = args[4].strip()
+                client = pm.SSHClient()
+                client.set_missing_host_key_policy(pm.AutoAddPolicy())
+                client.connect(host, username=user, password=passd)
+                stdinalt, stdoutalt, stderralt = client.exec_command(app, get_pty=True)
+                stdinalt.write(" ".join(args[5:]) + "\n")
+                for line in iter(stdoutalt.readline, ""):
+                    print(host + ": "+ line)
+                client.close()
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
@@ -107,6 +160,30 @@ class MacroHandler:
                     print(line[2:-1])
             elif args[0] == SHELL:
                 subprocess.run(args[1:])
+            elif args[0] == REMOTE:
+                host = args[1].strip()
+                user = args[2].strip()
+                passd = args[3].strip()
+                client = pm.SSHClient()
+                client.set_missing_host_key_policy(pm.AutoAddPolicy())
+                client.connect(host, username=user, password=passd)
+                stdin, stdout, stderr = client.exec_command(args[4:], get_pty=True)
+                for line in iter(stdout.readline, ""):
+                    print(host + ": "+ line)
+                client.close()
+            elif args[0] == REMOTE_SUBPROCESS:
+                host = args[1].strip()
+                user = args[2].strip()
+                passd = args[3].strip()
+                app = args[4].strip()
+                client = pm.SSHClient()
+                client.set_missing_host_key_policy(pm.AutoAddPolicy())
+                client.connect(host, username=user, password=passd)
+                stdinalt, stdoutalt, stderralt = client.exec_command(app, get_pty=True)
+                stdinalt.write(" ".join(args[5:]) + "\n")
+                for line in iter(stdoutalt.readline, ""):
+                    print(host + ": "+ line)
+                client.close()
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
