@@ -122,7 +122,7 @@ class ResultsHandler:
     def show_results(self):
         result_str = "Failures:"
         result_str += "\n".join(self.failures)
-        result_str += "\nPasses: " + len(self.passes) + "Noruns: " + len(self.inconclusive)
+        result_str += "\nPasses: " + str(len(self.passes)) + "Noruns: " + str(len(self.inconclusive))
         return result_str
 
     def email_results(self, email):
