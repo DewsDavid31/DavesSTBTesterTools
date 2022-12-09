@@ -1,1 +1,2 @@
-email david.dews@dish.com
+scrape /opt/android-platform-testing/android-vts/results/2022.12.9*
+print

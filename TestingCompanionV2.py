@@ -2,7 +2,7 @@ import subprocess
 import os
 import pyautogui
 import json
-import smtplib
+import smtplib, ssl
 import paramiko as pm
 import datetime
 PRESS = "press"
@@ -14,7 +14,7 @@ SHELL = "shell"
 REMOTE = "remote"
 REMOTE_SUBPROCESS = "remotesubprocess"
 SCRAPE_FILES = "scrape"
-EMAIL_RESULTS = "email"
+PRINT_RESULTS = "print"
 CLEAR = "clear"
 IF_TRIGGER = "if"
 # syntax for macros:
@@ -48,8 +48,8 @@ IF_TRIGGER = "if"
 # scrape <filepath> <pass start of result> <pass end of a result> <fail start of result> <fail end of a result> <norun start of result> <norun end of a result>
 # scrapes all passing, failing and norun results endcapped on either end by given text, used by email to give results later
 #
-# email <email address>
-# has user email themselves current scraped results
+# print
+# prints current scraped results
 #
 # clear
 # clears current results scraped
@@ -125,7 +125,7 @@ class ResultsHandler:
         result_str += "\nPasses: " + str(len(self.passes)) + "Noruns: " + str(len(self.inconclusive))
         return result_str
 
-    def email_results(self, email):
+    def email_results(self,email, username,  passw):
         mail = """\
         From: USER
         To: USER
@@ -134,10 +134,11 @@ class ResultsHandler:
         RESULTS
         """
         mail = mail.replace("USER", email).replace("DATE", str(datetime.date.today)).replace("RESULTS", self.show_results())
-        mail_endpoint = smtplib.SMTP()
-        mail_endpoint.sendmail(email, email, mail)
-        mail_endpoint.quit()
-
+        # known bug of python 3.7+
+        with smtplib.SMTP_SSL("smtp.googlemail.com", 465) as mail_endpoint:
+            mail_endpoint.login(username, passw)
+            mail_endpoint.sendmail(email, email, mail)
+        
     def failure_trigger_macro(self, result_trigger, macro):
         if result_trigger in self.failures:
             self.macro_flag = macro
@@ -208,9 +209,8 @@ class MacroHandler:
                 norun_start = args[6]
                 norun_end = args[7]
                 self.results_handler.scrape_files(os.listdir(scrape_path), pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
-            elif args[0] == EMAIL_RESULTS:
-                user_email = args[1]
-                self.results_handler.email_results(user_email)
+            elif args[0] == PRINT_RESULTS:
+                print(self.results_handler.show_results())
             elif args[0] == CLEAR:
                 self.results_handler.clear()
             elif args[0] == IF_TRIGGER:
@@ -290,9 +290,8 @@ class MacroHandler:
                 norun_start = args[6]
                 norun_end = args[7]
                 self.results_handler.scrape_files(os.listdir(scrape_path), pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
-            elif args[0] == EMAIL_RESULTS:
-                user_email = args[1]
-                self.results_handler.email_results(user_email)
+            elif args[0] == PRINT_RESULTS:
+                print(self.results_handler.show_results())
             elif args[0] == CLEAR:
                 self.results_handler.clear()
             elif args[0] == IF_TRIGGER:
