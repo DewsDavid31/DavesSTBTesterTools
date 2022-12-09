@@ -2,7 +2,9 @@ import subprocess
 import os
 import pyautogui
 import json
+import smtplib
 import paramiko as pm
+import datetime
 PRESS = "press"
 KEYBOARD = "keyboard"
 CLICK = "click"
@@ -11,6 +13,10 @@ SUBPROCESS = "subprocess"
 SHELL = "shell"
 REMOTE = "remote"
 REMOTE_SUBPROCESS = "remotesubprocess"
+SCRAPE_FILES = "scrape"
+EMAIL_RESULTS = "email"
+CLEAR = "clear"
+IF_TRIGGER = "if"
 # syntax for macros:
 # each of these formats is accepted as a line in a .macro file loaded by this application, nothing more
 # each is read and computed line-by-line
@@ -38,18 +44,24 @@ REMOTE_SUBPROCESS = "remotesubprocess"
 #
 # remotesubprocess <ip> <username> <password> <application> <terminal command>....
 # ssh into ip with username and password, then runs terminal command, then sends terminal commands into its i/o stream, used on tradefed
-
+#
+# scrape <filepath> <pass start of result> <pass end of a result> <fail start of result> <fail end of a result> <norun start of result> <norun end of a result>
+# scrapes all passing, failing and norun results endcapped on either end by given text, used by email to give results later
+#
+# email <email address>
+# has user email themselves current scraped results
+#
+# clear
+# clears current results scraped
+#
+# if <failure string> <macro path>
+# runs another macro by its path when this failure is found in results
 class PatternHandler:
     def pattern(self, pattern_string, variables, args):
         temp_string = pattern_string[:]
         for key, val in zip(variables,args):
             temp_string = temp_string.replace(key, val)
         return temp_string
-
-
-class MacroHandler:
-    def __init__(self):
-        self.pattern_handler = PatternHandler()
 
     def find_vars(self, string):
         found = []
@@ -65,11 +77,77 @@ class MacroHandler:
                     found_text = "@"
                 in_var = not in_var
         return found
-                    
 
-                    
+    def find_enclosed_pattern(self, string, start_pattern, end_pattern):
+            found = []
+            found_text = start_pattern
+            in_var = False
+            for charac in string:
+                if in_var:
+                    found_text += charac
+                if end_pattern in found_text:
+                    if in_var:
+                        if found_text not in found:
+                            found.append(found_text)
+                        found_text = start_pattern
+                    in_var = not in_var
+            return found
 
-                
+
+class ResultsHandler:
+    def __init__(self):
+        self.passes = []
+        self.failures = []
+        self.inconclusive = []
+        self.pattern_handler = PatternHandler()
+        self.macro_flag = "none"
+
+    def clear(self):
+        self.passes =[]
+        self.failures = []
+        self.inconclusive = []
+
+    def scrape_pattern(self, file, pass_start, pass_end, fail_start, fail_end, norun_start, norun_end):
+        scraped_file = open(file, 'r')
+        raw_text = scraped_file.readlines()
+        self.passes.extend(self.pattern_handler.find_enclosed_pattern(raw_text, pass_start, pass_end))
+        self.failures.extend(self.pattern_handler.find_enclosed_pattern(raw_text, fail_start, fail_end))
+        self.inconclusive.extend(self.pattern_handler.find_enclosed_pattern(raw_text, norun_start, norun_end))
+        scraped_file.close()
+        
+    def scrape_files(self, files, pass_start, pass_end, fail_start, fail_end, norun_start, norun_end):
+        for file in files:
+            self.scrape_pattern(self, file, pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
+
+    def show_results(self):
+        result_str = "Failures:"
+        result_str += "\n".join(self.failures)
+        result_str += "\nPasses: " + len(self.passes) + "Noruns: " + len(self.inconclusive)
+        return result_str
+
+    def email_results(self, email):
+        mail = """\
+        From: USER
+        To: USER
+        Subject: Results DATE
+
+        RESULTS
+        """
+        mail = mail.replace("USER", email).replace("DATE", str(datetime.date.today)).replace("RESULTS", self.show_results())
+        mail_endpoint = smtplib.SMTP()
+        mail_endpoint.sendmail(email, email, mail)
+        mail_endpoint.quit()
+
+    def failure_trigger_macro(self, result_trigger, macro):
+        if result_trigger in self.failures:
+            self.macro_flag = macro
+
+class MacroHandler:
+    def __init__(self):
+        self.pattern_handler = PatternHandler()
+        self.results_handler = ResultsHandler()
+
+                           
     def read_macro(self, macro_path):
         macro_file = open(macro_path)
         macro_lines = macro_file.readlines()
@@ -121,6 +199,25 @@ class MacroHandler:
                 for line in iter(stdoutalt.readline, ""):
                     print(host + ": "+ line)
                 client.close()
+            elif args[0] == SCRAPE_FILES:
+                scrape_path = args[1]
+                pass_start = args[2]
+                pass_end = args[3]
+                fail_start = args[4]
+                fail_end = args[5]
+                norun_start = args[6]
+                norun_end = args[7]
+                self.results_handler.scrape_files(os.listdir(scrape_path), pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
+            elif args[0] == EMAIL_RESULTS:
+                user_email = args[1]
+                self.result_handler.email_results(user_email)
+            elif args[0] == CLEAR:
+                self.results_handler.clear()
+            elif args[0] == IF_TRIGGER:
+                macro_path = args[2]
+                condition = args[1]
+                if self.results_handler.macro_flag == condition:
+                    self.read_macro(macro_path)
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
@@ -129,7 +226,7 @@ class MacroHandler:
     def read_macro_pattern(self, macro_path):
         macro_file = open(macro_path)
         macro_lines = macro_file.readlines()
-        pattern = self.find_vars(str(macro_lines))
+        pattern = self.pattern_handler.find_vars(str(macro_lines))
         values = []
         for item in pattern:
             values.append(input("Insert value for variable " + item + ": "))
@@ -184,6 +281,25 @@ class MacroHandler:
                 for line in iter(stdoutalt.readline, ""):
                     print(host + ": "+ line)
                 client.close()
+            elif args[0] == SCRAPE_FILES:
+                scrape_path = args[1]
+                pass_start = args[2]
+                pass_end = args[3]
+                fail_start = args[4]
+                fail_end = args[5]
+                norun_start = args[6]
+                norun_end = args[7]
+                self.results_handler.scrape_files(os.listdir(scrape_path), pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
+            elif args[0] == EMAIL_RESULTS:
+                user_email = args[1]
+                self.result_handler.email_results(user_email)
+            elif args[0] == CLEAR:
+                self.results_handler.clear()
+            elif args[0] == IF_TRIGGER:
+                macro_path = args[2]
+                condition = args[1]
+                if self.results_handler.macro_flag == condition:
+                    self.read_macro(macro_path)
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
