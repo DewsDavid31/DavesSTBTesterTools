@@ -1,2 +1,2 @@
-scrape /opt/android-platform-testing/android-vts/results/2022.12.9*
+scrape /opt/android-platform-testing/android-vts/results
 print

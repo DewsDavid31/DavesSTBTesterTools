@@ -117,7 +117,8 @@ class ResultsHandler:
         
     def scrape_files(self, files, pass_start, pass_end, fail_start, fail_end, norun_start, norun_end):
         for file in files:
-            self.scrape_pattern(self, file, pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
+            if ".zip" not in file:
+                self.scrape_pattern(file, pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
 
     def show_results(self):
         result_str = "Failures:"
@@ -208,7 +209,8 @@ class MacroHandler:
                 fail_end = args[5]
                 norun_start = args[6]
                 norun_end = args[7]
-                self.results_handler.scrape_files(os.listdir(scrape_path), pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
+            
+                self.results_handler.scrape_files(os.listdir(scrape_path) , pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
             elif args[0] == PRINT_RESULTS:
                 print(self.results_handler.show_results())
             elif args[0] == CLEAR:
