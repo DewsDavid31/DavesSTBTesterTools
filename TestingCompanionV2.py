@@ -210,7 +210,7 @@ class MacroHandler:
                 self.results_handler.scrape_files(os.listdir(scrape_path), pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
             elif args[0] == EMAIL_RESULTS:
                 user_email = args[1]
-                self.result_handler.email_results(user_email)
+                self.results_handler.email_results(user_email)
             elif args[0] == CLEAR:
                 self.results_handler.clear()
             elif args[0] == IF_TRIGGER:
@@ -292,7 +292,7 @@ class MacroHandler:
                 self.results_handler.scrape_files(os.listdir(scrape_path), pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
             elif args[0] == EMAIL_RESULTS:
                 user_email = args[1]
-                self.result_handler.email_results(user_email)
+                self.results_handler.email_results(user_email)
             elif args[0] == CLEAR:
                 self.results_handler.clear()
             elif args[0] == IF_TRIGGER:
