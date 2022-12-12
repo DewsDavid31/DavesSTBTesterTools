@@ -80,17 +80,27 @@ class PatternHandler:
 
     def find_enclosed_pattern(self, string, start_pattern, end_pattern):
             found = []
-            found_text = start_pattern
+            found_text = ""
             in_var = False
+            index = 0
             for charac in string:
-                if in_var:
+                if in_var and index >= len(end_pattern):
+                    found.append(found_text.replace(' ',''))
+                    found_text = ""
+                    index = 0
+                    in_var = False
+                elif in_var and charac == end_pattern[index]:
+                    index += 1
+                elif in_var and charac != end_pattern[index]:
                     found_text += charac
-                if end_pattern in found_text:
-                    if in_var:
-                        if found_text not in found:
-                            found.append(found_text)
-                        found_text = start_pattern
-                    in_var = not in_var
+                    index = 0
+                elif index == len(start_pattern):
+                    in_var = True
+                    index = 0
+                elif charac == start_pattern[index]:
+                    index+=1
+                else:
+                    index = 0
             return found
 
 
@@ -100,7 +110,6 @@ class ResultsHandler:
         self.failures = []
         self.inconclusive = []
         self.pattern_handler = PatternHandler()
-        self.macro_flag = "none"
 
     def clear(self):
         self.passes =[]
@@ -109,7 +118,7 @@ class ResultsHandler:
 
     def scrape_pattern(self, file, pass_start, pass_end, fail_start, fail_end, norun_start, norun_end):
         scraped_file = open(file, 'r')
-        raw_text = scraped_file.readlines()
+        raw_text = "".join(scraped_file.readlines()).strip()
         self.passes.extend(self.pattern_handler.find_enclosed_pattern(raw_text, pass_start, pass_end))
         self.failures.extend(self.pattern_handler.find_enclosed_pattern(raw_text, fail_start, fail_end))
         self.inconclusive.extend(self.pattern_handler.find_enclosed_pattern(raw_text, norun_start, norun_end))
@@ -117,29 +126,15 @@ class ResultsHandler:
         
     def scrape_files(self, files, pass_start, pass_end, fail_start, fail_end, norun_start, norun_end):
         for file in files:
-            if ".zip" not in file:
+            if ".xml" in file:
                 self.scrape_pattern(file, pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
 
     def show_results(self):
-        result_str = "Failures:"
+        result_str = "Failures: \n"
         result_str += "\n".join(self.failures)
-        result_str += "\nPasses: " + str(len(self.passes)) + "Noruns: " + str(len(self.inconclusive))
+        result_str += "\nPasses: " + str(len(self.passes)) + " Noruns: " + str(len(self.inconclusive))
         return result_str
 
-    def email_results(self,email, username,  passw):
-        mail = """\
-        From: USER
-        To: USER
-        Subject: Results DATE
-
-        RESULTS
-        """
-        mail = mail.replace("USER", email).replace("DATE", str(datetime.date.today)).replace("RESULTS", self.show_results())
-        # known bug of python 3.7+
-        with smtplib.SMTP_SSL("smtp.googlemail.com", 465) as mail_endpoint:
-            mail_endpoint.login(username, passw)
-            mail_endpoint.sendmail(email, email, mail)
-        
     def failure_trigger_macro(self, result_trigger, macro):
         if result_trigger in self.failures:
             self.macro_flag = macro
@@ -149,83 +144,7 @@ class MacroHandler:
         self.pattern_handler = PatternHandler()
         self.results_handler = ResultsHandler()
 
-                           
     def read_macro(self, macro_path):
-        macro_file = open(macro_path)
-        macro_lines = macro_file.readlines()
-        line_num = 0
-        for line in macro_lines:
-            line_num+=1
-            args = line.split()
-            if args[0] == PRESS and len(args) >= 2:
-                pyautogui.press(args[1])
-            elif args[0] == HOTKEY and len(args) >= 2:
-                pyautogui.hotkey(args[1:])
-            elif args[0] == KEYBOARD and len(args) >= 2:
-                partial = args[1:]
-                for writing in partial:
-                    pyautogui.write(writing + " ")
-            elif args[0] == CLICK:
-                if len(args) == 1:
-                    pyautogui.click()
-                elif len(args == 3):
-                    pyautogui.click(args[1],args[2])
-            elif args[0] == SUBPROCESS:
-                stripped = " ".join(args[1:])
-                process = subprocess.call([stripped],shell=True)
-                for line in process.stdout.readlines():
-                    print(line[2:-1])
-            elif args[0] == SHELL:
-                subprocess.run(args[1:])
-            elif args[0] == REMOTE:
-                host = args[1].strip()
-                user = args[2].strip()
-                passd = args[3].strip()
-                client = pm.SSHClient()
-                client.set_missing_host_key_policy(pm.AutoAddPolicy())
-                client.connect(host, username=user, password=passd)
-                stdin, stdout, stderr = client.exec_command(args[4:], get_pty=True)
-                for line in iter(stdout.readline, ""):
-                    print(host + ": "+ line)
-                client.close()
-            elif args[0] == REMOTE_SUBPROCESS:
-                host = args[1].strip()
-                user = args[2].strip()
-                passd = args[3].strip()
-                app = args[4].strip()
-                client = pm.SSHClient()
-                client.set_missing_host_key_policy(pm.AutoAddPolicy())
-                client.connect(host, username=user, password=passd)
-                stdinalt, stdoutalt, stderralt = client.exec_command(app, get_pty=True)
-                stdinalt.write(" ".join(args[5:]) + "\n")
-                for line in iter(stdoutalt.readline, ""):
-                    print(host + ": "+ line)
-                client.close()
-            elif args[0] == SCRAPE_FILES:
-                scrape_path = args[1]
-                pass_start = args[2]
-                pass_end = args[3]
-                fail_start = args[4]
-                fail_end = args[5]
-                norun_start = args[6]
-                norun_end = args[7]
-            
-                self.results_handler.scrape_files(os.listdir(scrape_path) , pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
-            elif args[0] == PRINT_RESULTS:
-                print(self.results_handler.show_results())
-            elif args[0] == CLEAR:
-                self.results_handler.clear()
-            elif args[0] == IF_TRIGGER:
-                macro_path = args[2]
-                condition = args[1]
-                if self.results_handler.macro_flag == condition:
-                    self.read_macro(macro_path)
-            else:
-                print("Invalid syntax at line " + str(line_num) + "")
-                print("Actual: " + line)
-                print("Expecting: <"+ PRESS + "/" + KEYBOARD + "/" + HOTKEY + "/" + CLICK + "/" + ">\t<Key/Text/coordinate>\t<key/coordinate>...")
-
-    def read_macro_pattern(self, macro_path):
         macro_file = open(macro_path)
         macro_lines = macro_file.readlines()
         pattern = self.pattern_handler.find_vars(str(macro_lines))
@@ -291,7 +210,10 @@ class MacroHandler:
                 fail_end = args[5]
                 norun_start = args[6]
                 norun_end = args[7]
+                curr_dir = os.getcwd()
+                os.chdir(scrape_path)
                 self.results_handler.scrape_files(os.listdir(scrape_path), pass_start, pass_end, fail_start, fail_end, norun_start, norun_end)
+                os.chdir(curr_dir)
             elif args[0] == PRINT_RESULTS:
                 print(self.results_handler.show_results())
             elif args[0] == CLEAR:
@@ -299,7 +221,7 @@ class MacroHandler:
             elif args[0] == IF_TRIGGER:
                 macro_path = args[2]
                 condition = args[1]
-                if self.results_handler.macro_flag == condition:
+                if condition in self.results_handler.failures:
                     self.read_macro(macro_path)
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
@@ -429,16 +351,27 @@ class TestingCompanion:
 
     def main_menu(self):
         print('Welcome to DavesSTBTesterTools Version 2.0!')
-        command = input('1. Run a Macro File\n2. Create a Macro File\n3. Fetch STB from repo\n4. Run a macro with variables\n5. Exit\nEnter a number from above: ')
+        command = input('1. Run a Macro File\n2. Create a Macro File\n3. Fetch STB from repo\n4. Exit\nEnter a number from above: ')
         if not str.isdigit(command) or int(command) > 5 or int(command) < 1:
             print("Invalid number, retry...")
             self.main_menu() 
         elif command == "1":
             print('Current Macros:')
-            print(os.listdir(self.macro_path))
-            chosen_macro = input('Enter macro above to run: ')
-            self.macro_handler.read_macro(os.path.join(self.macro_path,chosen_macro))
-            self.main_menu()
+            dirlist = os.listdir(self.macro_path)
+            macros = []
+            index = 0
+            for macro in dirlist:
+                if ".macro" in macro:
+                    print(str(index) + ": " + macro)
+                    index += 1
+                    macros.append(macro)
+            chosen_macro = input('Enter index of macro to run: ')
+            if(not chosen_macro.isdigit() or int(chosen_macro) < 0 or int(chosen_macro) > len(macros)):
+                print("Invalid selection, retry")
+                self.main_menu()
+            else:
+                self.macro_handler.read_macro(os.path.join(self.macro_path,macros[int(chosen_macro)]))
+                self.main_menu()
         elif command == "2":
             macro_name = input('Enter name of new macro: ')
             self.macro_handler.create_macro(os.path.join(self.macro_path, macro_name))
@@ -450,11 +383,6 @@ class TestingCompanion:
             self.repo.fetch(in_variables)
             self.main_menu()
         elif command == "4":
-            print('Current Macros:')
-            print(os.listdir(self.macro_path))
-            chosen_macro = input('Enter macro above to run: ')
-            self.macro_handler.read_macro_pattern(os.path.join(self.macro_path, chosen_macro))
-        elif command == "5":
             return
         else:
             print("invalid selection, try again")

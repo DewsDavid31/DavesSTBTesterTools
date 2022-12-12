@@ -1,0 +1,5 @@
+<pass= testpass1 >testpass1</failure>
+<failure= testfail1 >testfail1</failure>
+<norun= norun1 >norun1</norun1>
+<garbage=garbage>
+<garbage=garbage>
