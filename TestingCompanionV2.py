@@ -17,6 +17,7 @@ SCRAPE_FILES = "scrape"
 PRINT_RESULTS = "print"
 CLEAR = "clear"
 IF_TRIGGER = "if"
+EXPORT_ENV = "export"
 # syntax for macros:
 # each of these formats is accepted as a line in a .macro file loaded by this application, nothing more
 # each is read and computed line-by-line
@@ -56,6 +57,9 @@ IF_TRIGGER = "if"
 #
 # if <failure string> <macro path>
 # runs another macro by its path when this failure is found in results
+#
+# export <export name> <export value>
+# sets export in shell using os.putenv
 class PatternHandler:
     def pattern(self, pattern_string, variables, args):
         temp_string = pattern_string[:]
@@ -223,6 +227,10 @@ class MacroHandler:
                 condition = args[1]
                 if condition in self.results_handler.failures:
                     self.read_macro(macro_path)
+            elif args[0] == EXPORT_ENV:
+                env_key = args[1]
+                env_val = args[2]
+                os.putenv(env_key, env_val)
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
