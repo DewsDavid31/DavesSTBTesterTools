@@ -1,3 +1,0 @@
-scrape /Users/daviddews/Code/python_forge/DavesSTBTesterTools/results/ <pass= > <failure= >  <norun= >
-print
-if testfail1 ./MACRO/printest.macro

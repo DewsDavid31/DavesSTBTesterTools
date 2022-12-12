@@ -1,3 +1,0 @@
-clear
-scrape /Users/daviddews/Code/python_forge/DavesSTBTesterTools/results/ <pass= > <failure= >  <norun= >
-print

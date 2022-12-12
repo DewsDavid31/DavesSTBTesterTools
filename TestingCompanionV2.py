@@ -239,58 +239,122 @@ class MacroHandler:
 
     def create_macro(self, macro_path):
         macro_text = ""
+        commands = ["press of a key","keyboard text input","mouse click","key combos","tradefed or threaded program", "linux commands","remote linux commands","remote tradefed or threaded program","scrape results from result files", "print results so far", "clear results so far", "trigger another macro on a failure result", "set an export on terminal","DONE making macro"]
         fully_done = False
         while(not fully_done):
-            command = input("Enter index for type of keypress\n1. press of a key\n2. keyboard text input\n3. mouse click\n4.key combos\n5. DONE making macro\nEnter a number from above: ")
-            if not str.isdigit(command) or int(command) > 6 or int(command) < 1:
+            command_index = 1
+            for command_choice in commands:
+                print(str(command_index) + ": " + command_choice)
+                command_index += 1
+            command = input("Enter a choice from above: ")
+            if not str.isdigit(command) or int(command) > len(commands) or int(command) < 1:
                 print("Invalid number, retry...")
                 self.create_macro(macro_path)
-                if command == "1":
-                    macro_text += PRESS
-                    command = input("Enter key name to press: ")
+            if command == "1":
+                macro_text += PRESS
+                command = input("Enter key name to press: ")
+                macro_text += "\t" + command + "\n"
+            elif command ==  "2":
+                macro_text += KEYBOARD
+                command = input("Enter text to send to keyboard: ")
+                macro_text += "\t" + command + "\n"
+            elif command == "3":
+                macro_text += CLICK
+                command = input("Enter x pixels for location of click or none for current location: ")
+                if command != "none":
+                    macro_text += "\t" + command
+                    command = input("Enter y pixels for location of click: ")
                     macro_text += "\t" + command + "\n"
-                elif command ==  "2":
-                    macro_text += KEYBOARD
-                    command = input("Enter text to send to keyboard: ")
-                    macro_text += "\t" + command + "\n"
-                elif command == "3":
-                    macro_text += CLICK
-                    command = input("Enter x pixels for location of click or none for current location: ")
-                    if command != "none":
+            elif command == "4":
+                macro_text += HOTKEY
+                done = False
+                while(not done):
+                    if command != "DONE":
+                        command = input("Enter key names to combine or DONE to finish: ")
                         macro_text += "\t" + command
-                        command = input("Enter y pixels for location of click: ")
-                        macro_text += "\t" + command + "\n"
-                elif command == "4":
-                    macro_text += HOTKEY
-                    done = False
-                    while(not done):
-                        if command != "DONE":
-                            command = input("Enter key names to combine or DONE to finish: ")
-                            macro_text += "\t" + command + "\n"
-                        else:
-                            done = True
-                elif command == "5":
-                    macro_text += SUBPROCESS
-                    done = False
-                    first_command = input("Enter the software to be passed args")
-                    macro_text += "\t" + first_command
-                    while(not done):
-                        if command != "DONE":
-                            command = input("Enter commands to pass or DONE to finish: ")
-                            macro_text += "\t" + command + "\n"
-                        else:
-                            done = True
-                    fully_done = True
-                elif command == "6":
-                    macro_text += SHELL
-                    done = False
-                    while(not done):
-                        if command != "DONE":
-                            command = input("Enter commands to run in terminal or DONE to finish: ")
-                            macro_text += "\t" + command + "\n"
-                        else:
-                            done = True
-                    fully_done = True
+                    else:
+                        done = True
+                macro_text += "\n"
+            elif command == "5":
+                macro_text += SUBPROCESS
+                done = False
+                first_command = input("Enter the software to be passed args")
+                macro_text += "\t" + first_command
+                while(not done):
+                    if command != "DONE":
+                        command = input("Enter commands to pass or DONE to finish: ")
+                        macro_text += "\t" + command
+                    else:
+                        done = True
+                fully_done = True
+                macro_text += "\n"
+            elif command == "6":
+                macro_text += SHELL
+                done = False
+                while(not done):
+                    if command != "DONE":
+                        command = input("Enter commands to run in terminal or DONE to finish: ")
+                        macro_text += "\t" + command
+                    else:
+                        done = True
+                fully_done = True
+                macro_text += "\n"
+            elif command == "7":
+                macro_text += REMOTE
+                next_ip = input("Enter ip address of machine you wish to remote into: ")
+                macro_test += "\t" + next_ip
+                done = False
+                while(not done):
+                    if command != "DONE":
+                        command = input("Enter commands to remotely or DONE to finish: ")
+                        macro_text += "\t" + command
+                    else:
+                        done = True
+                fully_done = True
+                macro_text += "\n"
+            elif command == "8":
+                macro_text += REMOTE_SUBPROCESS
+                next_ip = input("Enter ip address of machine you wish to remote into: ")
+                macro_test += "\t" + next_ip
+                next_program = input("Input tradefed or other threaded progam you wish to pass commands to")
+                macro_text += "\t" + next_program
+                done = False
+                while(not done):
+                    if command != "DONE":
+                        command = input("Enter commands to remotely or DONE to finish: ")
+                        macro_text += "\t" + command
+                    else:
+                        done = True
+                fully_done = True
+                macro_text += "\n"
+            elif command == "9":
+                macro_text += SCRAPE_FILES
+                next_path = input("Enter path of files you wish to scrape results from: ")
+                macro_test += "\t" + next_path
+                pass_start = input("Enter text that begins in files before a passing test name: ")
+                pass_end = input("Enter text that comes after a passing test name: ")
+                fail_start = input("Enter text that begins in files before a failing test name: ")
+                fail_end = input("Enter text that comes after a failing test name: ")
+                norun_start = input("Enter text that begins in files before a test name that wasnt run: ")
+                norun_end = input("Enter text that comes after a test name that wasnt run: ")
+                macro_test += "\t" + pass_start + "\t" + pass_end + "\t" + fail_start + "\t" + fail_end + "\t" + norun_start + "\t" + norun_end + "\n"
+            elif command == "10":
+                macro_text += PRINT_RESULTS + "\n"
+            elif command == "11":
+                macro_text += CLEAR + "\n"
+            elif command == "12":
+                macro_text += IF_TRIGGER
+                condition = input("Enter test name that will trigger another macro when failed: ")
+                macro_name = input("Enter name of macro that will be ran when that test fails: ")
+                macro_text += "\t" + condition + "\t" + macro_name + "\n"
+            elif command == "13":
+                macro_text += EXPORT_ENV
+                env_key = input("Enter exported variable name: ")
+                env_val = input("Enter exported variable value, such as a path: ")
+                macro_text += "\t" + env_key + "\t" + env_val + "\n"
+            else:
+                fully_done = True
+                print("Done making macro!")    
         print("Writing new macro to " + macro_path + "...")
         new_macro = open(macro_path + '.macro', 'w+')
         new_macro.write(macro_text)
