@@ -17,7 +17,9 @@ SCRAPE_FILES = "scrape"
 PRINT_RESULTS = "print"
 CLEAR = "clear"
 IF_TRIGGER = "if"
+IF_NOT_TRIGGER = "ifnot"
 EXPORT_ENV = "export"
+PROMPT = "prompt"
 # syntax for macros:
 # each of these formats is accepted as a line in a .macro file loaded by this application, nothing more
 # each is read and computed line-by-line
@@ -55,17 +57,37 @@ EXPORT_ENV = "export"
 # clear
 # clears current results scraped
 #
-# if <failure string> <macro path>
-# runs another macro by its path when this failure is found in results
+# if <string> <macro path> <resultpath> <resultfile>
+# runs another macro by its path when string is found in the most recent folder in the path inside the file provided
+#
+# ifnot <string> <macro path> <resultpath> <resultfile>
+# runs another macro by its path when string is NOT found in the most recent folder in the path inside the file provided
 #
 # export <export name> <export value>
 # sets export in shell using os.putenv
+#
+# prompt <message>
+# prompts user to do something before continuing
 class PatternHandler:
     def pattern(self, pattern_string, variables, args):
         temp_string = pattern_string[:]
         for key, val in zip(variables,args):
             temp_string = temp_string.replace(key, val)
         return temp_string
+
+    def find_most_recent_with(self, result_path, file, string):
+        curr_dir = os.getcwd()
+        os.chdir(result_path)
+        directory =[d for d in os.listdir(result_path) if os.path.isdir(d)]
+        most_recent = max(directory, key=os.path.getmtime)
+        file_raw = open(os.path.join(most_recent, file), 'r')
+        file_lines = "".join(file_raw.readlines())
+        if string in file_lines:
+            file_raw.close()
+            return True
+        file_raw.close()
+        os.chdir(curr_dir)
+        return False
 
     def find_vars(self, string):
         found = []
@@ -223,14 +245,26 @@ class MacroHandler:
             elif args[0] == CLEAR:
                 self.results_handler.clear()
             elif args[0] == IF_TRIGGER:
+                result_file = args[4]
+                result_path = args[3]
                 macro_path = args[2]
                 condition = args[1]
-                if condition in self.results_handler.failures:
+                if self.pattern_handler.find_most_recent_with(result_path, result_file, condition):
+                    self.read_macro(macro_path)
+            elif args[0] == IF_NOT_TRIGGER:
+                result_file = args[4]
+                result_path = args[3]
+                macro_path = args[2]
+                condition = args[1]
+                if not self.pattern_handler.find_most_recent_with(result_path, result_file, condition):
                     self.read_macro(macro_path)
             elif args[0] == EXPORT_ENV:
                 env_key = args[1]
                 env_val = args[2]
                 os.putenv(env_key, env_val)
+            elif args[0] == PROMPT:
+                message = " ".join(args[1:])
+                input(message)
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)
@@ -239,7 +273,7 @@ class MacroHandler:
 
     def create_macro(self, macro_path):
         macro_text = ""
-        commands = ["press of a key","keyboard text input","mouse click","key combos","tradefed or threaded program", "linux commands","remote linux commands","remote tradefed or threaded program","scrape results from result files", "print results so far", "clear results so far", "trigger another macro on a failure result", "set an export on terminal","DONE making macro"]
+        commands = ["press of a key","keyboard text input","mouse click","key combos","tradefed or threaded program", "linux commands","remote linux commands","remote tradefed or threaded program","scrape results from result files", "print results so far", "clear results so far", "trigger another macro on finding text","trigger another macro on NOT finding text", "set an export on terminal","prompt user to do something","DONE making macro"]
         fully_done = False
         while(not fully_done):
             command_index = 1
@@ -344,14 +378,27 @@ class MacroHandler:
                 macro_text += CLEAR + "\n"
             elif command == "12":
                 macro_text += IF_TRIGGER
-                condition = input("Enter test name that will trigger another macro when failed: ")
-                macro_name = input("Enter name of macro that will be ran when that test fails: ")
-                macro_text += "\t" + condition + "\t" + macro_name + "\n"
+                condition = input("Enter string that will trigger the next macro: ")
+                macro_name = input("Enter path of macro to be run: ")
+                result_path = input("Enter path to find most recent result in: ")
+                result_file = input("Enter result file: ")
+                macro_text += "\t" + condition + "\t" + macro_name + "\t" + result_path + "\t" + result_file + "\n"
             elif command == "13":
+                macro_text += IF_NOT_TRIGGER
+                condition = input("Enter string that when not present will trigger the next macro: ")
+                macro_name = input("Enter path of macro to be run: ")
+                result_path = input("Enter path to find most recent result in: ")
+                result_file = input("Enter result file: ")
+                macro_text += "\t" + condition + "\t" + macro_name + "\t" + result_path + "\t" + result_file + "\n"
+            elif command == "14":
                 macro_text += EXPORT_ENV
                 env_key = input("Enter exported variable name: ")
                 env_val = input("Enter exported variable value, such as a path: ")
                 macro_text += "\t" + env_key + "\t" + env_val + "\n"
+            elif command == "15":
+                macro_text += PROMPT
+                message = input("Enter what you want the user to do before proceeding: ")
+                macro_text += "\t" + message + "\n"
             else:
                 fully_done = True
                 print("Done making macro!")    
