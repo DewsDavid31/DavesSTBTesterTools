@@ -1,0 +1,2 @@
+shell adb connect @ip1@
+subprocess @tims_build_location@ run cts -m CtsHostsideNetworkTests -s @ip1@

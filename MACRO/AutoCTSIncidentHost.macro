@@ -1,0 +1,2 @@
+shell adb connect @ip1@
+subprocess cts-tradefed run cts -m CtsIncidentHostTestCases -s @ip1@

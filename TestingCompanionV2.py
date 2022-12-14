@@ -1,10 +1,9 @@
+# uncomment these imports if Pip is up to date
 import subprocess
 import os
-import pyautogui
+#import pyautogui
 import json
-import smtplib, ssl
-import paramiko as pm
-import datetime
+#import paramiko as pm
 PRESS = "press"
 KEYBOARD = "keyboard"
 CLICK = "click"

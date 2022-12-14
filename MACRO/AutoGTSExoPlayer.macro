@@ -1,0 +1,2 @@
+shell adb connect @ip1@
+subprocess gts-tradefed run gts -m GtsExoPlayerTestCases -s @ip1@
