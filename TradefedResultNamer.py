@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 def rename_results_folder(nested_path):
     curr_dir = os.getcwd()
     os.chdir(nested_path)
-    dirs_only = [d for d in os.listdir(nested_path) if os.path.isdir()]
+    dirs_only = [d for d in os.listdir(nested_path) if os.path.isdir(d)]
     for folder in dirs_only:
         new_name = strip_name_data(folder)
         rename_folder(nested_path + "/" + folder, new_name)
@@ -15,7 +15,7 @@ def strip_name_data(folder_path):
     try:
         curr_dir = os.getcwd()
         os.chdir(folder_path)
-        xml_file = open(os.path.join(folder_path, "test_result.xml"), 'r')
+        xml_file = open("test_result.xml", 'r')
         root_xml = ET.parse(xml_file)
         build_element = root_xml.find("Build").attrib
         suite_element = root_xml.getroot().attrib
