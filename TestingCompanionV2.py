@@ -1,9 +1,9 @@
 # uncomment these imports if Pip is up to date
 import subprocess
 import os
-#import pyautogui
+import pyautogui
 import json
-#import paramiko as pm
+import paramiko as pm
 PRESS = "press"
 KEYBOARD = "keyboard"
 CLICK = "click"
@@ -210,10 +210,11 @@ class MacroHandler:
                 client = pm.SSHClient()
                 client.set_missing_host_key_policy(pm.AutoAddPolicy())
                 client.connect(host, username=user, password=passd)
-                stdin, stdout, stderr = client.exec_command(args[4:], get_pty=True)
+                stdin, stdout, stderr = client.exec_command(" ".join(args[4:]), get_pty=True)
                 for line in iter(stdout.readline, ""):
                     print(host + ": "+ line)
                 client.close()
+                stdout.close()
             elif args[0] == REMOTE_SUBPROCESS:
                 host = args[1].strip()
                 user = args[2].strip()
@@ -226,7 +227,10 @@ class MacroHandler:
                 stdinalt.write(" ".join(args[5:]) + "\n")
                 for line in iter(stdoutalt.readline, ""):
                     print(host + ": "+ line)
+                    if line =="============================================":
+                        break
                 client.close()
+                stdoutalt.close()
             elif args[0] == SCRAPE_FILES:
                 scrape_path = args[1]
                 pass_start = args[2]
