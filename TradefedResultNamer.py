@@ -7,7 +7,11 @@ def rename_results_folder(nested_path):
     dirs_only = [d for d in os.listdir(nested_path) if os.path.isdir(d)]
     for folder in dirs_only:
         new_name = strip_name_data(folder)
-        rename_folder(nested_path + "/" + folder, new_name)
+        if str.isnumeric(folder.replace('.','').replace('_','')):
+            print("renaming " + folder )
+            rename_folder(nested_path + "/" + folder, new_name)
+        else:
+            print(folder + " is already named or not in tradfed date format! skipping!")
     os.chdir(curr_dir)
 
 def strip_name_data(folder_path):
