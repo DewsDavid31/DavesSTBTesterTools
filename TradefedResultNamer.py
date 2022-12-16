@@ -36,7 +36,7 @@ def rename_folder(folder_path, new_name):
     os.chdir(folder_path + "/../")
     new_path = "/".join(folder_path.split("/")[-1:]) + new_name
     os.rename(folder_path, new_path)
-    if os.path.isfile(folder_path + ".zip"):
+    if os.path.exists(folder_path + ".zip") and os.path.isfile(folder_path + ".zip"):
         os.rename(folder_path + ".zip", new_path + ".zip")
     os.chdir(curr_dir)
 
