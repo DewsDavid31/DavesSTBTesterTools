@@ -34,7 +34,7 @@ def strip_name_data(folder_path):
 def rename_folder(folder_path, new_name):
     curr_dir = os.getcwd()
     os.chdir(folder_path + "/../")
-    new_path = "/".join(folder_path.split("/")[-1:]) + new_name
+    new_path = "/".join(folder_path.split("/")[:-1]) + new_name
     os.rename(folder_path, new_path)
     os.chdir(curr_dir)
 
