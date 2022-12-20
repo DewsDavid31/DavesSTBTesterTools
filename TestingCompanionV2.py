@@ -198,7 +198,7 @@ class MacroHandler:
                     pyautogui.click(args[1],args[2])
             elif args[0] == SUBPROCESS:
                 end_string = args[-1]
-                stripped = " ".join(args[1:])
+                stripped = " ".join(args[1:-1])
                 output = subprocess.Popen(stripped, stdout=subprocess.PIPE, shell=True).stdout
                 for line in iter(output.readline, ""):
                     formatted = line.decode('ascii')
