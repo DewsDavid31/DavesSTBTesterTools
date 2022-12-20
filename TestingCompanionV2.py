@@ -44,8 +44,8 @@ PROMPT = "prompt"
 # remote <ip> <username> <password> <terminal command>....
 # ssh into ip with username and password, then runs terminal commands given
 #
-# remotesubprocess <ip> <username> <password> <application> <terminal command>....
-# ssh into ip with username and password, then runs terminal command, then sends terminal commands into its i/o stream, used on tradefed
+# remotesubprocess <ip> <username> <password> <application> <terminal command>.... <endstring>
+# ssh into ip with username and password, then runs terminal command until endstring is found, then sends terminal commands into its i/o stream, used on tradefed
 #
 # scrape <filepath> <pass start of result> <pass end of a result> <fail start of result> <fail end of a result> <norun start of result> <norun end of a result>
 # scrapes all passing, failing and norun results endcapped on either end by given text, used by email to give results later
@@ -198,9 +198,9 @@ class MacroHandler:
                     pyautogui.click(args[1],args[2])
             elif args[0] == SUBPROCESS:
                 stripped = " ".join(args[1:])
-                process = subprocess.call([stripped],shell=True)
-                for line in process.stdout.readlines():
-                    print(line[2:-1])
+                output = subprocess.getoutput([stripped],shell=True)
+                for line in output:
+                    print(line)
             elif args[0] == SHELL:
                 subprocess.run(args[1:])
             elif args[0] == REMOTE:
@@ -216,6 +216,7 @@ class MacroHandler:
                 client.close()
                 stdout.close()
             elif args[0] == REMOTE_SUBPROCESS:
+                endstring = args[5].strip()
                 host = args[1].strip()
                 user = args[2].strip()
                 passd = args[3].strip()
@@ -227,7 +228,7 @@ class MacroHandler:
                 stdinalt.write(" ".join(args[5:]) + "\n")
                 for line in iter(stdoutalt.readline, ""):
                     print(host + ": "+ line)
-                    if "============== End of Results ==============" in line:
+                    if endstring in line:
                         break
                 client.close()
                 stdoutalt.close()
@@ -273,10 +274,36 @@ class MacroHandler:
                 print("Actual: " + line)
                 print("Expecting: <"+ PRESS + "/" + KEYBOARD + "/" + HOTKEY + "/" + CLICK + "/" + ">\t<Key/Text/coordinate>\t<key/coordinate>...")
 
+    def _prompt_command_(command, prompt_text, multiple=False, starting_command=False, first_prompt=""):
+                macro_text = command + "\t"
+                if starting_command:
+                    macro_text += input(first_prompt) + "\t"
+                done = False
+                while(not done):
+                    command = input(prompt_text)
+                    if not multiple:
+                        done = True
+                    if command != "DONE":
+                        macro_text += "\t" + command
+                    else:
+                        done = True
+                macro_text += "\n"
+                return macro_text
+
+    def _prompt_options_(command, prompt_list):
+        macro_text = command + "\t"
+        for prompt in prompt_list:
+            macro_text += input(prompt) + "\t"
+        return macro_text
+        
 
     def create_macro(self, macro_path):
         macro_text = ""
-        commands = ["press of a key","keyboard text input","mouse click","key combos","tradefed or threaded program", "linux commands","remote linux commands","remote tradefed or threaded program","scrape results from result files", "print results so far", "clear results so far", "trigger another macro on finding text","trigger another macro on NOT finding text", "set an export on terminal","prompt user to do something","DONE making macro"]
+        SCRAPE_PROMPTS = ["Enter path of files you wish to scrape results from: ","Enter text that begins in files before a passing test name: ","Enter text that comes after a passing test name: ", "Enter text that begins in files before a failing test name: ","Enter text that comes after a failing test name: ", "Enter text that begins in files before a test name that wasnt run: ", "Enter text that comes after a test name that wasnt run: "]
+        IF_PROMPTS = ["Enter string that will trigger the next macro: ","Enter path of macro to be run: ","Enter path to find most recent result in: ","Enter result file: "]
+        IF_NOT_PROMPTS = ["Enter string that when not present will trigger the next macro: ","Enter path of macro to be run: ","Enter path to find most recent result in: ","Enter result file: "]
+        ENV_PROMPTS = ["Enter exported variable name: ","Enter exported variable value, such as a path: "]
+        commands = ["press of a key","keyboard text input","mouse click","key combos","tradefed or threaded program", "shell commands","remote shell commands","remote tradefed or threaded program","scrape results from result files", "print results so far", "clear results so far", "trigger another macro on finding text","trigger another macro on NOT finding text", "set an export on terminal","prompt user to do something","DONE making macro"]
         fully_done = False
         while(not fully_done):
             command_index = 1
@@ -288,13 +315,9 @@ class MacroHandler:
                 print("Invalid number, retry...")
                 self.create_macro(macro_path)
             if command == "1":
-                macro_text += PRESS
-                command = input("Enter key name to press: ")
-                macro_text += "\t" + command + "\n"
+                macro_text += self._prompt_command_(PRESS, "Enter key name to press: ")
             elif command ==  "2":
-                macro_text += KEYBOARD
-                command = input("Enter text to send to keyboard: ")
-                macro_text += "\t" + command + "\n"
+                macro_text += self._prompt_command_(KEYBOARD, "Enter text to send to keyboard: ")
             elif command == "3":
                 macro_text += CLICK
                 command = input("Enter x pixels for location of click or none for current location: ")
@@ -303,108 +326,47 @@ class MacroHandler:
                     command = input("Enter y pixels for location of click: ")
                     macro_text += "\t" + command + "\n"
             elif command == "4":
-                macro_text += HOTKEY
-                done = False
-                while(not done):
-                    if command != "DONE":
-                        command = input("Enter key names to combine or DONE to finish: ")
-                        macro_text += "\t" + command
-                    else:
-                        done = True
-                macro_text += "\n"
+                macro_text += self._prompt_command_(HOTKEY, "Enter key names to combine or DONE to finish: ", True)
             elif command == "5":
-                macro_text += SUBPROCESS
-                done = False
-                first_command = input("Enter the software to be passed args")
-                macro_text += "\t" + first_command
-                while(not done):
-                    if command != "DONE":
-                        command = input("Enter commands to pass or DONE to finish: ")
-                        macro_text += "\t" + command
-                    else:
-                        done = True
-                fully_done = True
-                macro_text += "\n"
+                macro_text += self._prompt_command_(SUBPROCESS, "Enter commands to pass or DONE to finish: ", True, True, "Enter the software to be passed args")
             elif command == "6":
-                macro_text += SHELL
-                done = False
-                while(not done):
-                    if command != "DONE":
-                        command = input("Enter commands to run in terminal or DONE to finish: ")
-                        macro_text += "\t" + command
-                    else:
-                        done = True
-                fully_done = True
-                macro_text += "\n"
+                macro_text += self._prompt_command_(SHELL, "Enter shell command or DONE to finish: ", True)
             elif command == "7":
-                macro_text += REMOTE
-                next_ip = input("Enter ip address of machine you wish to remote into: ")
-                macro_test += "\t" + next_ip
-                done = False
-                while(not done):
-                    if command != "DONE":
-                        command = input("Enter commands to remotely or DONE to finish: ")
-                        macro_text += "\t" + command
-                    else:
-                        done = True
-                fully_done = True
-                macro_text += "\n"
+                macro_text += self._prompt_command_(REMOTE, "Enter commands to remotely or DONE to finish: ", True, True, "Enter ip address of machine you wish to remote into: ")
             elif command == "8":
                 macro_text += REMOTE_SUBPROCESS
                 next_ip = input("Enter ip address of machine you wish to remote into: ")
-                macro_test += "\t" + next_ip
+                macro_text += "\t" + next_ip
                 next_program = input("Input tradefed or other threaded progam you wish to pass commands to")
                 macro_text += "\t" + next_program
                 done = False
                 while(not done):
+                    command = input("Enter commands to remotely or DONE to finish: ")
                     if command != "DONE":
-                        command = input("Enter commands to remotely or DONE to finish: ")
                         macro_text += "\t" + command
                     else:
                         done = True
-                fully_done = True
+                macro_text += input("Enter the line that will occur when your subprocess/tradefed ends") + "\t"
                 macro_text += "\n"
             elif command == "9":
-                macro_text += SCRAPE_FILES
-                next_path = input("Enter path of files you wish to scrape results from: ")
-                macro_test += "\t" + next_path
-                pass_start = input("Enter text that begins in files before a passing test name: ")
-                pass_end = input("Enter text that comes after a passing test name: ")
-                fail_start = input("Enter text that begins in files before a failing test name: ")
-                fail_end = input("Enter text that comes after a failing test name: ")
-                norun_start = input("Enter text that begins in files before a test name that wasnt run: ")
-                norun_end = input("Enter text that comes after a test name that wasnt run: ")
-                macro_test += "\t" + pass_start + "\t" + pass_end + "\t" + fail_start + "\t" + fail_end + "\t" + norun_start + "\t" + norun_end + "\n"
+                macro_text += self._prompt_options_(SCRAPE_FILES, SCRAPE_PROMPTS)
             elif command == "10":
                 macro_text += PRINT_RESULTS + "\n"
             elif command == "11":
                 macro_text += CLEAR + "\n"
             elif command == "12":
-                macro_text += IF_TRIGGER
-                condition = input("Enter string that will trigger the next macro: ")
-                macro_name = input("Enter path of macro to be run: ")
-                result_path = input("Enter path to find most recent result in: ")
-                result_file = input("Enter result file: ")
-                macro_text += "\t" + condition + "\t" + macro_name + "\t" + result_path + "\t" + result_file + "\n"
+                macro_text += self._prompt_options_(IF_TRIGGER, IF_PROMPTS)
             elif command == "13":
-                macro_text += IF_NOT_TRIGGER
-                condition = input("Enter string that when not present will trigger the next macro: ")
-                macro_name = input("Enter path of macro to be run: ")
-                result_path = input("Enter path to find most recent result in: ")
-                result_file = input("Enter result file: ")
-                macro_text += "\t" + condition + "\t" + macro_name + "\t" + result_path + "\t" + result_file + "\n"
+                macro_text += self._prompt_options_(IF_NOT_TRIGGER, IF_NOT_PROMPTS)
             elif command == "14":
-                macro_text += EXPORT_ENV
-                env_key = input("Enter exported variable name: ")
-                env_val = input("Enter exported variable value, such as a path: ")
-                macro_text += "\t" + env_key + "\t" + env_val + "\n"
+                macro_text += self._prompt_options_(EXPORT_ENV, ENV_PROMPTS)
             elif command == "15":
-                macro_text += PROMPT
-                message = input("Enter what you want the user to do before proceeding: ")
-                macro_text += "\t" + message + "\n"
-            else:
+                macro_text = self._prompt_command_(PROMPT, "Enter what you want the user to do before proceeding: ")
+            elif command == len(commands):
                 fully_done = True
-                print("Done making macro!")    
+                print("Done making macro!")
+            else:
+                print("invalid selection, try again")    
         print("Writing new macro to " + macro_path + "...")
         new_macro = open(macro_path + '.macro', 'w+')
         new_macro.write(macro_text)
