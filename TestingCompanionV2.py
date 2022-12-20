@@ -35,8 +35,8 @@ PROMPT = "prompt"
 # hotkey <keyname> <keyname>...
 # holds each key by its given name at the same time
 #
-# subprocess <application> <terminal command>...
-# does terminal command for application and pipes arguments into its i/o stream used on tradefed
+# subprocess <application> <terminal command>...<end string>
+# does terminal command for application and pipes arguments into its i/o stream used on tradefed and exits when end string is found in output
 #
 # shell <terminal command> <terminal command>...
 # directly runs posix commands given after shell
@@ -197,10 +197,14 @@ class MacroHandler:
                 elif len(args == 3):
                     pyautogui.click(args[1],args[2])
             elif args[0] == SUBPROCESS:
+                end_string = args[-1]
                 stripped = " ".join(args[1:])
                 output = subprocess.Popen(stripped, stdout=subprocess.PIPE, shell=True).stdout
                 for line in iter(output.readline, ""):
-                    print(line)
+                    formatted = line.decode('ascii')
+                    print(formatted)
+                    if end_string in formatted:
+                        break
             elif args[0] == SHELL:
                 subprocess.run(args[1:])
             elif args[0] == REMOTE:
@@ -328,7 +332,17 @@ class MacroHandler:
             elif command == "4":
                 macro_text += self._prompt_command_(HOTKEY, "Enter key names to combine or DONE to finish: ", True)
             elif command == "5":
-                macro_text += self._prompt_command_(SUBPROCESS, "Enter commands to pass or DONE to finish: ", True, True, "Enter the software to be passed args")
+                macro_text += REMOTE_SUBPROCESS
+                next_program = input("Input tradefed or other threaded progam you wish to pass commands to")
+                macro_text += "\t" + next_program
+                done = False
+                while(not done):
+                    command = input("Enter commands to remotely or DONE to finish: ")
+                    if command != "DONE":
+                        macro_text += "\t" + command
+                    else:
+                        done = True
+                macro_text += input("Enter the line that will cause your subprocess/tradefed to end") + "\n"
             elif command == "6":
                 macro_text += self._prompt_command_(SHELL, "Enter shell command or DONE to finish: ", True)
             elif command == "7":
@@ -346,8 +360,7 @@ class MacroHandler:
                         macro_text += "\t" + command
                     else:
                         done = True
-                macro_text += input("Enter the line that will occur when your subprocess/tradefed ends") + "\t"
-                macro_text += "\n"
+                macro_text += input("Enter the line that will cause your subprocess/tradefed to end") + "\n"
             elif command == "9":
                 macro_text += self._prompt_options_(SCRAPE_FILES, SCRAPE_PROMPTS)
             elif command == "10":
