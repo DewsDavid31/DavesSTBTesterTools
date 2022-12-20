@@ -198,7 +198,7 @@ class MacroHandler:
                     pyautogui.click(args[1],args[2])
             elif args[0] == SUBPROCESS:
                 stripped = " ".join(args[1:])
-                output = subprocess.getoutput([stripped],shell=True)
+                output = subprocess.getoutput([stripped])
                 for line in output:
                     print(line)
             elif args[0] == SHELL:
