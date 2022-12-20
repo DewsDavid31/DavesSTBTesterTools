@@ -232,7 +232,7 @@ class MacroHandler:
                 stdinalt.write(" ".join(args[5:]) + "\n")
                 for line in iter(stdoutalt.readline, ""):
                     print(host + ": "+ line)
-                    if endstring in line:
+                    if endstring in line or len(endstring) == 0:
                         break
                 client.close()
                 stdoutalt.close()
