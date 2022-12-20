@@ -199,8 +199,8 @@ class MacroHandler:
             elif args[0] == SUBPROCESS:
                 stripped = " ".join(args[1:])
                 output = subprocess.Popen(stripped, stdout=subprocess.PIPE, shell=True)
-                #for line in iter(output, ""):
-                #    print(line)
+                for line in iter(output, ""):
+                    print(line)
             elif args[0] == SHELL:
                 subprocess.run(args[1:])
             elif args[0] == REMOTE:
