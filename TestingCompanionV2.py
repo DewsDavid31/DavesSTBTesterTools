@@ -199,7 +199,7 @@ class MacroHandler:
             elif args[0] == SUBPROCESS:
                 stripped = " ".join(args[1:])
                 output = subprocess.getoutput([stripped])
-                for line in output:
+                for line in iter(output, ""):
                     print(line)
             elif args[0] == SHELL:
                 subprocess.run(args[1:])
