@@ -203,7 +203,7 @@ class MacroHandler:
                 for line in iter(output.readline, ""):
                     formatted = line.decode('ascii')
                     print(formatted)
-                    if end_string in formatted:
+                    if end_string in formatted or len(formatted) == 0:
                         break
             elif args[0] == SHELL:
                 subprocess.run(args[1:])
@@ -232,7 +232,7 @@ class MacroHandler:
                 stdinalt.write(" ".join(args[5:]) + "\n")
                 for line in iter(stdoutalt.readline, ""):
                     print(host + ": "+ line)
-                    if endstring in line or len(endstring) == 0:
+                    if endstring in line:
                         break
                 client.close()
                 stdoutalt.close()
