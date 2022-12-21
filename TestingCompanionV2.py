@@ -35,7 +35,7 @@ PROMPT = "prompt"
 # hotkey <keyname> <keyname>...
 # holds each key by its given name at the same time
 #
-# subprocess <application> <terminal command>...<end string>
+# subprocess <application> <terminal command>...<end string no spaces>
 # does terminal command for application and pipes arguments into its i/o stream used on tradefed and exits when end string is found in output
 #
 # shell <terminal command> <terminal command>...
@@ -44,7 +44,7 @@ PROMPT = "prompt"
 # remote <ip> <username> <password> <terminal command>....
 # ssh into ip with username and password, then runs terminal commands given
 #
-# remotesubprocess <ip> <username> <password> <application> <terminal command>.... <endstring>
+# remotesubprocess <ip> <username> <password> <application> <terminal command>.... <endstring no spaces>
 # ssh into ip with username and password, then runs terminal command until endstring is found, then sends terminal commands into its i/o stream, used on tradefed
 #
 # scrape <filepath> <pass start of result> <pass end of a result> <fail start of result> <fail end of a result> <norun start of result> <norun end of a result>
@@ -203,7 +203,7 @@ class MacroHandler:
                 for line in iter(output.readline, ""):
                     formatted = line.decode('ascii')
                     print(formatted)
-                    if end_string in formatted or len(formatted) == 0:
+                    if end_string in formatted.strip() or len(formatted) == 0:
                         break
             elif args[0] == SHELL:
                 subprocess.run(args[1:])
@@ -220,7 +220,7 @@ class MacroHandler:
                 client.close()
                 stdout.close()
             elif args[0] == REMOTE_SUBPROCESS:
-                endstring = args[5].strip()
+                endstring = args[-1].strip()
                 host = args[1].strip()
                 user = args[2].strip()
                 passd = args[3].strip()
@@ -229,10 +229,10 @@ class MacroHandler:
                 client.set_missing_host_key_policy(pm.AutoAddPolicy())
                 client.connect(host, username=user, password=passd)
                 stdinalt, stdoutalt, stderralt = client.exec_command(app, get_pty=True)
-                stdinalt.write(" ".join(args[5:]) + "\n")
+                stdinalt.write(" ".join(args[5:-1]) + "\n")
                 for line in iter(stdoutalt.readline, ""):
                     print(host + ": "+ line)
-                    if endstring in line:
+                    if endstring in line.strip():
                         break
                 client.close()
                 stdoutalt.close()
