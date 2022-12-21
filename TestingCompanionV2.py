@@ -198,7 +198,7 @@ class MacroHandler:
                     pyautogui.click(args[1],args[2])
             elif args[0] == SUBPROCESS:
                 end_string = args[-1]
-                stripped = " ".join(args[1:-1])
+                stripped = " ".join(args[1:-2])
                 output = subprocess.Popen(stripped, stdout=subprocess.PIPE, shell=True).stdout
                 for line in iter(output.readline, ""):
                     formatted = line.decode('ascii')
@@ -206,7 +206,7 @@ class MacroHandler:
                     if end_string in formatted.strip() or len(formatted) == 0:
                         break
             elif args[0] == SHELL:
-                subprocess.run(args[1:])
+                subprocess.run(" ".join(args[1:]), shell=True)
             elif args[0] == REMOTE:
                 host = args[1].strip()
                 user = args[2].strip()
