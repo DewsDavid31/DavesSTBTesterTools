@@ -1,3 +1,0 @@
-prompt set up wifi and ether connection first!
-shell adb connect @ip1@
-subprocess vts-tradefed run cst-on-gsi -m CtsNetApi23TestCases -s @ip1@ 

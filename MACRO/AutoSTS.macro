@@ -1,3 +1,0 @@
-shell adb connect @ip1@
-shell adb connect @ip2@
-subprocess sts-tradefed run sts --shard-count 2 -s @ip1@ -s @ip2@ --retry-strategy RETRY_ANY_FAILURE --max-testcase-run-count 2

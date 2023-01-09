@@ -1,3 +1,0 @@
-shell adb connect @ip1@
-prompt Connect @ip1@ to switch to computer and adb connect it and authorize it
-subprocess tvts-tradefed run tvts-cert -m TvtsYouTubeTS -s @ip1@ --retry-strategy RETRY_ANY_FAILURE --max-testcase-run-count 2

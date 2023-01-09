@@ -1,3 +1,0 @@
-prompt Delete CTS Verifier app before running!
-shell adb connect @ip1@
-subprocess gts-tradefed run gts -m GtsPermissionTestCases -s @ip1@

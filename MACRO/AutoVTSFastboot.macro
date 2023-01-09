@@ -1,4 +1,0 @@
-prompt connect  jam cable 1 with @ip1@
-shell adb connect @ip1@
-export FASTBOOT_SERIAL_@ip_with_underscores@ @ipv6@%enp3s0
-subprocess vts-tradefed run vts -m VtsFastbootVerification -s @ip1@

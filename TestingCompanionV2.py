@@ -1,9 +1,9 @@
 # uncomment these imports if Pip is up to date
 import subprocess
 import os
-import pyautogui
+#import pyautogui #uncomment this if server has pyautogui
 import json
-import paramiko as pm
+#import paramiko as pm #uncomment this if server has paramiko
 PRESS = "press"
 KEYBOARD = "keyboard"
 CLICK = "click"
@@ -19,6 +19,7 @@ IF_TRIGGER = "if"
 IF_NOT_TRIGGER = "ifnot"
 EXPORT_ENV = "export"
 PROMPT = "prompt"
+RERUN = "tradefed"
 # syntax for macros:
 # each of these formats is accepted as a line in a .macro file loaded by this application, nothing more
 # each is read and computed line-by-line
@@ -67,6 +68,9 @@ PROMPT = "prompt"
 #
 # prompt <message>
 # prompts user to do something before continuing
+#
+# tradefed <suite> <result path> <num devices> <tradefed args> <device ip> <device ip>...
+# calls tradefed of given suite and command, then provides results and asks if you want to do a rerun, and reruns on same devices.
 class PatternHandler:
     def pattern(self, pattern_string, variables, args):
         temp_string = pattern_string[:]
@@ -198,7 +202,7 @@ class MacroHandler:
                     pyautogui.click(args[1],args[2])
             elif args[0] == SUBPROCESS:
                 end_string = args[-1]
-                stripped = " ".join(args[1:-2])
+                stripped = " ".join(args[1:-1])
                 output = subprocess.Popen(stripped, stdout=subprocess.PIPE, shell=True).stdout
                 for line in iter(output.readline, ""):
                     formatted = line.decode('ascii')
@@ -273,6 +277,38 @@ class MacroHandler:
             elif args[0] == PROMPT:
                 message = " ".join(args[1:])
                 input(message)
+            elif args[0] == RERUN:
+                fed = args[2]
+                suite = args[1]
+                devicenum = args[4]
+                results = args[3]
+                command = " ".join(args[5:int(devicenum)])
+                devices = " -s " + (" -s ".join(args[-int(devicenum):]))
+                endstring = "EndofResults"
+                tradefed_done = False
+                firstrun =  suite + " run " + fed  +  command
+                if int(devicenum) > 1:
+                    devices = " --shard-count " + devicenum + " " + devices
+                firstrun += devices
+                output = subprocess.Popen(firstrun, stdout=subprocess.PIPE, shell=True).stdout
+                for line in iter(output.readline, " "):
+                    formatted = line.decode('ascii')
+                    print(formatted)
+                    if endstring in formatted.strip() or len(formatted) == 0:
+                        break
+                while(not tradefed_done):
+                    if input("would you like to rerun this test(Y/n)?").lower() == "n":
+                        tradefed_done = True
+                    result_count = -1
+                    for folder in os.listdir(results):
+                       if ".zip" not in folder and os.path.isfile(os.path.join(results,folder,"test_result.xml")): 
+                           result_count += 1
+                    output = subprocess.Popen(suite + " run retry --retry " + str(result_count) + " " +  devices, stdout=subprocess.PIPE, shell=True).stdout
+                    for line in iter(output.readline, " "):
+                        formatted = line.decode('ascii')
+                        print(formatted)
+                        if endstring in formatted.strip() or len(formatted) == 0:
+                            break
             else:
                 print("Invalid syntax at line " + str(line_num) + "")
                 print("Actual: " + line)

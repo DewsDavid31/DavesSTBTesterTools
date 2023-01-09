@@ -1,3 +1,0 @@
-prompt factory reset this box fist!
-shell adb connect @ip1@
-subprocess cts-tradefed run cts -m DecoderTest -t testTunneledVideoPlayback -s @ip1@

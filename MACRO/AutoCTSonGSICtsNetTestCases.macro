@@ -1,5 +1,0 @@
-prompt remove network from MJ4, IPV6 connect slot 1 dummy switch, ether last and first slot to MJ4
-prompt reboot for IPV6, ether 2nd right slot to linux machine, reboot MJ4
-prompt verify 192 address, adb connect 192 address, then continue...
-shell adb connect @ip1@
-subprocess vts-tradefed run cst-on-gsi -m CtsNetTestCases -s @ip1@ 

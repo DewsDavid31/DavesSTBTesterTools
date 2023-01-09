@@ -1,3 +1,0 @@
-prompt set up two networks on wifi router and local ethernet first, use ip of local one!
-shell adb connect @ip1@
-subprocess cts-tradefed run cts -m CtsNetApi23TestCases -s @ip1@

@@ -1,4 +1,0 @@
-shell adb connect @ip1@
-shell adb root
-shell adb shell chmod -R 777 /dev/shm
-subprocess @tim_location_program@ run vts -m "VtsKernelLtp" -s @ip1@

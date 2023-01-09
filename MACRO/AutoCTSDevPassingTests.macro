@@ -1,2 +1,0 @@
-shell adb connect @ip1@
-subprocess @tims_build_location@ run cts -m CtsWidgetTestCases -m CtsSecurityHostTestCases -m CtsGraphicsTestCases -s @ip1@

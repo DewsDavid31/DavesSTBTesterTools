@@ -1,3 +1,0 @@
-prompt connect IPV6 to box first
-shell adb connect @ip1@
-subprocess cts-tradefed run cts -m CtsLibcoreTestCases -s @ip1@

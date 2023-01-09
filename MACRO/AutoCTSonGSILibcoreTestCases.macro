@@ -1,3 +1,0 @@
-prompt connect to IPV6 first
-shell adb connect @ip1@
-subprocess vts-tradefed run cst-on-gsi -m CtsLibcoreTestCases -s @ip1@ 

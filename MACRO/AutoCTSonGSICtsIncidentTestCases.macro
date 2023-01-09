@@ -1,2 +1,0 @@
-shell adb connect @ip1@
-subprocess vts-tradefed run cst-on-gsi -m CtsIncidentHostTestCases -s @ip1@ 

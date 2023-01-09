@@ -1,3 +1,0 @@
-prompt GTS R1 9.1 - R1 10 cannot run this
-shell adb connect @ip1@
-subprocess gts-tradefed run gts -m GtsAlarmPermissionDeviceTestCases -s @ip1@

@@ -1,0 +1,4 @@
+prompt This is an example of what a macro can do press any key to continue and open a terminal
+shell start
+prompt Press any key to let the macro type for you, this only works with pyautogui installed
+keyboard This macro typed this for you

@@ -1,5 +1,0 @@
-prompt be ready to adb disconnect and reconnect during this test
-shell adb connect @ip1@
-subprocess vts-tradefed run vts -m VtsKernelProcFileApi @ip1@
-
-
