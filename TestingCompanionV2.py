@@ -351,7 +351,7 @@ class MacroHandler:
                 print(str(command_index) + ": " + command_choice)
                 command_index += 1
             command = input("Enter a choice from above: ")
-            if not str.isdigit(command) or int(command) > len(commands) or int(command) < 1:
+            if not str.isdigit(command) or int(command) > len(commands) + 1 or int(command) < 1:
                 print("Invalid number, retry...")
                 self.create_macro(macro_path)
             if command == "1":
@@ -411,9 +411,10 @@ class MacroHandler:
                 macro_text += self._prompt_options_(EXPORT_ENV, ENV_PROMPTS)
             elif command == "15":
                 macro_text = self._prompt_command_(PROMPT, "Enter what you want the user to do before proceeding: ")
-            elif command == len(commands):
+            elif command == "16":
                 fully_done = True
                 print("Done making macro!")
+                break
             else:
                 print("invalid selection, try again")    
         print("Writing new macro to " + macro_path + "...")
@@ -498,9 +499,12 @@ class TestingCompanion:
                     print(str(index) + ": " + macro)
                     index += 1
                     macros.append(macro)
+                print(str(index) + ": exit")
             chosen_macro = input('Enter index of macro to run: ')
-            if(not chosen_macro.isdigit() or int(chosen_macro) < 0 or int(chosen_macro) > len(macros)):
+            if(not chosen_macro.isdigit() or int(chosen_macro) < 0 or int(chosen_macro) > len(macros) + 1):
                 print("Invalid selection, retry")
+                self.main_menu()
+            elif int(chosen_macro) == len(macros):
                 self.main_menu()
             else:
                 self.macro_handler.read_macro(os.path.join(self.macro_path,macros[int(chosen_macro)]))
