@@ -69,7 +69,7 @@ RERUN = "tradefed"
 # prompt <message>
 # prompts user to do something before continuing
 #
-# tradefed <suite> <result path> <num devices> <tradefed args> <device ip> <device ip>...
+# tradefed <program name> <suite name> <result path> <num devices> <tradefed args> <device ip> <device ip>...
 # calls tradefed of given suite and command, then provides results and asks if you want to do a rerun, and reruns on same devices.
 class PatternHandler:
     def pattern(self, pattern_string, variables, args):
@@ -499,7 +499,7 @@ class TestingCompanion:
                     print(str(index) + ": " + macro)
                     index += 1
                     macros.append(macro)
-                print(str(index) + ": exit")
+            print(str(index) + ": exit")
             chosen_macro = input('Enter index of macro to run: ')
             if(not chosen_macro.isdigit() or int(chosen_macro) < 0 or int(chosen_macro) > len(macros) + 1):
                 print("Invalid selection, retry")
