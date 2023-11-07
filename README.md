@@ -13,10 +13,7 @@ The testing companion can walk you through building a macro file of you wish in 
 ### Download STB locally
 The testing companion can also download the most recent files within a drive with a folder structure you can provide by a string in the v2config.json with portions to replace shown by "@@"
 
-## FastRemoteSession.py
-A simple python program that runs a putty session from preselected ips you give along with your password and username input, as long as you have a ips.json filled in with a list of ips under "ip" and username under "username" and password under "userpass"
-
-## TradefedResultNamer.py
+## tradefed_result_renamer.py
 A python program that will take a given result directory of tradefed, open the xml result file and rename the folder and its .zip file to the naming convention of android certification test results
 
 ## old version
